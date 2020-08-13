@@ -1,0 +1,23 @@
+{
+  "name": "sharedboxserver",
+  "version": "1.0.0",
+  "description": "sharedBox Server ",
+  "main": "index.js",
+  "scripts": {
+    "dbInit": "C:/Users/veilh/mongodb/bin/mongod.exe --dbpath=C:/Users/veilh/mongodb-data",
+    "dev": "env-cmd -f ./config/dev.env nodemon index.js"
+  },
+  "author": "veilhelm alexander guarin",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.28"
+  },
+  "devDependencies": {
+    "env-cmd": "^10.1.0",
+    "nodemon": "^2.0.4"
+  }
+}
