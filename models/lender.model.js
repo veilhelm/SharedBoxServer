@@ -70,6 +70,10 @@ const lenderSchema = new Schema ({
     },
     city: {
         type: String
+    },
+    isVerified:{
+        type: Boolean,
+        default: false
     }
 },{
     timestamps: true
