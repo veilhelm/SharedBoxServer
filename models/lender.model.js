@@ -1,6 +1,7 @@
 const { Schema , model } = require("mongoose")
 const jwt = require("jsonwebtoken")
 const bcript = require("bcrypt")
+const validator = require("validator")
 
 const lenderSchema = new Schema ({
     name:{
