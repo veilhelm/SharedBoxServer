@@ -2,7 +2,7 @@ const { connection, connect } = require("mongoose")
 
 function db () {
     //setUp of variables
-    const uri = process.env.DB_URI
+    const uri = process.env.DB_URI || "mongodb://127.0.0.1:27017/sharedBox"
 
     const options = { 
         useNewUrlParser : true,
