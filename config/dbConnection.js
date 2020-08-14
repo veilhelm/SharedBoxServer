@@ -2,7 +2,7 @@ const { connection, connect } = require("mongoose")
 
 function db () {
     //setUp of variables
-    const uri = process.env.DB_URL
+    const uri = process.env.DB_URI
 
     const options = { 
         useNewUrlParser : true,
