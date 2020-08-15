@@ -79,9 +79,10 @@ const lenderSchema = new Schema ({
     timestamps: true
 })
 
-lenderSchema.methods.generateAuthToken = function () {
+lenderSchema.methods.generateAuthToken = async function () {
     const token = jwt.sign({_id: this._id.toString()}, process.env.SECRET_KEY, {expiresIn: "1 days"})
     this.tokens = this.tokens.concat(token)
+    await this.save()
     return token
 }
 
