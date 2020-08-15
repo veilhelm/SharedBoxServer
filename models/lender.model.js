@@ -26,7 +26,7 @@ const lenderSchema = new Schema ({
         required: true,
         validate: {
             validator(value){
-                if(this.email.split(/\.|\@|_|-/g).some(word => value.includes(word) && word !== "com" || "co" ) || value.length < 6 || !/\d/.test(value)) return false
+                if(this.email.split(/\.|\@|_|-/g).some(word => value.includes(word) && word !== "com" ) || value.length < 6 || !/\d/.test(value)) return false
             },
             message: "password must be 6 characters long, contain at least one digit number and cannot contain words used in the email"
         }
@@ -79,10 +79,11 @@ const lenderSchema = new Schema ({
     timestamps: true
 })
 
-lenderSchema.methods.generateAuthToken = function () {
+lenderSchema.methods.generateAuthToken = async function () {
     const token = jwt.sign({_id: this._id.toString()}, process.env.SECRET_KEY, {expiresIn: "1 days"})
     this.tokens = this.tokens.concat(token)
-    return this
+    await this.save()
+    return token
 }
 
 lenderSchema.methods.getPublicData = function () {
