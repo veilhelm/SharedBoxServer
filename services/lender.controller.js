@@ -3,6 +3,7 @@ const Lender = require("../models/lender.model")
 const lendersubscribers = require("../subscribers/lender.subscribers")
 const bcrypt = require("bcrypt")
 
+
 class LenderService extends EventEmiter {
 
     createNewLender = async (req ,res) => {
@@ -10,6 +11,11 @@ class LenderService extends EventEmiter {
         try{
             const lender = await new Lender(lenderData)
             const token = await lender.generateAuthToken()
+            await lender.save() 
+            this.emit("lenderCreated")
+            res.status(201).send(token)
+        }catch(err){
+            res.status(400).send(err)
             this.emit("lenderCreated")
             res.status(201).json(token)
         }catch(err){
