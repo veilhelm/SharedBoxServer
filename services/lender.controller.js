@@ -42,6 +42,7 @@ const lenderService = new LenderService()
 //set all listners so that every single function listed here will execute when the specify event within the object lender happens
 lenderService.on(`lenderCreated`,lendersubscribers.sendRegistrationEmail)
 lenderService.on("userLoged", () => console.log("a user has loged in the app"))
+
 module.exports = lenderService
 
 
