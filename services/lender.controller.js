@@ -24,10 +24,9 @@ class LenderService extends EventEmiter {
             const isValid = await bcrypt.compare(password, lender.password || "" )
             if(Object.keys(lender).length === 0 || !isValid) throw Error("the email or password is incorrect")
             const token = await lender.generateAuthToken()
-            this.emit("userLoged")
+            this.emit("lenderLoged")
             res.status(200).json(token)
         }catch(err){
-            console.log(err)
             res.status(401).json(err.message)
         }
     }
@@ -35,13 +34,25 @@ class LenderService extends EventEmiter {
     getLender = async (req, res) => {
         res.status(200).json(req.lender)
     }
+
+    updateLender = async (req, res) => {
+        if(req.body.password) req.lender.passwordIsEncrypted = false
+        Object.keys(req.body).forEach( param => req.lender[param] = req.body[param])
+        try{
+            const updatedLender = await req.lender.save()
+            this.emit("lenderUpdated")
+            res.json(updatedLender)
+        }catch(err){
+            res.status(400).json(err.message)
+        }
+    }
 }
 
 const lenderService = new LenderService()
 
 //set all listners so that every single function listed here will execute when the specify event within the object lender happens
 lenderService.on(`lenderCreated`,lendersubscribers.sendRegistrationEmail)
-lenderService.on("userLoged", () => console.log("a user has loged in the app"))
+lenderService.on("lenderLoged", () => console.log("a user has loged in the app"))
 module.exports = lenderService
 
 
