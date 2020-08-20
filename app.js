@@ -2,9 +2,9 @@ require("dotenv").config({path: __dirname + '/.env.dev'})
 const express = require ("express")
 const cors = require("cors")
 const lenderRouter = require("./routes/lender.route")
+const dateRouter = require("./routes/dates.route")
 const morgan = require("morgan")
 const helmet = require("helmet")
-
 
 
 //stablish DB connection
@@ -24,5 +24,7 @@ app.use("/lender", lenderRouter)
 
 //setUp all routers
 app.use("/lender", lenderRouter)
+
+app.use("/dates",dateRouter)
 
 module.exports = app
