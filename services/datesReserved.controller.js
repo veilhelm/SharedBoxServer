@@ -1,14 +1,13 @@
-const EventEmitter = require("events");
+const EventEmiter = require("events");
 const DateReserved = require("../models/dateReserved.model");
+const DateReservedSubscribers = require("../subscribers/dateReserved.subscribers");
 
-class DateService extends EventEmitter {
+class DateService extends EventEmiter {
   createNewDate = async (req,res) => {
-    console.log(req)
     const dateData  = (({ spaceId, initialDate, finalDate, tenantId}) => ({spaceId, initialDate, finalDate, tenantId}))(req.body);
     try {
       const newDate = await new DateReserved(dateData);
-      console.log(newDate)
-      //this.emit("dateCreated", newDate ) 
+      this.emit("dateCreated", newDate ) 
       await newDate.save();
       res.status(201).json(newDate)
     } catch(err) {
@@ -16,13 +15,12 @@ class DateService extends EventEmitter {
     }
   }
   getDate = async (req, res) => {
-    console.log(req.body)
-    const date  = await DateReserved.find({spaceId: req.body.spaceId,tenantId:req.body.tenantId});
+    const date  = await DateReserved.find({spaceId: req.body.spaceId});
     res.status(200).json(date)   
   }
 }
 
 const dateService = new DateService();
-spaceServices.on('dateCreated',spaceSubscribers.addSpaceIdToLender)
+dateService.on('dateCreated',DateReservedSubscribers.addDateToSpace)
 
 module.exports = dateService

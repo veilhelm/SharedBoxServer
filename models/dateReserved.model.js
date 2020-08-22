@@ -2,11 +2,11 @@ const { Schema, model } = require("mongoose");
 const jwt = require("jsonwebtoken");
 
 const DateReservedSchema = new Schema({
-  /*spaceId: {
+  spaceId: {
     type: Schema.Types.ObjectId,
     //required: true,
     ref: "Space"
-  },*/
+  },
   initialDate: {
     type: Date,
     required: true
@@ -15,11 +15,11 @@ const DateReservedSchema = new Schema({
     type: Date,
     required: true
   },
-  /*tenantId: {
+  tenantId: {
     type: Schema.Types.ObjectId,
     //required: true,
     ref: "Tenant"
-  }*/
+  }
 },{
   timestamps: true
 } );

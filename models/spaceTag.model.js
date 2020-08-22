@@ -2,8 +2,14 @@ const { Schema , model, Mongoose } = require("mongoose");
 const validator = require("validator");
 
 const spaceTagSchema = new Schema({
-  tag: String,
-  description: String
+  tag: {
+    type: String,
+    required: true
+  },
+  description: { 
+    type: String,
+    required: true
+  }
 }, {
   timestamps: true
 })
