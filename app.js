@@ -5,6 +5,7 @@ const lenderRouter = require("./routes/lender.route")
 const dateReservedRouter = require("./routes/datesReserved.route")
 const spaceRouter = require("./routes/space.route")
 const spaceTagsRouter = require("./routes/spaceTag.route")
+const questionsAnswersRouter = require("./routes/questionsAnswers.route")
 const morgan = require("morgan")
 const helmet = require("helmet")
 
@@ -28,4 +29,6 @@ app.use("/dates", dateReservedRouter)
 app.use("/space", spaceRouter)
 
 app.use("/spaceTags", spaceTagsRouter)
+
+app.use("/queAns", questionsAnswersRouter)
 module.exports = app
