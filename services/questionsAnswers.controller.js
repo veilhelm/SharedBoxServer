@@ -3,7 +3,7 @@ const questionAnswer = require("../models/questionAnswer.model");
 
 class QuestionAnswerService extends EventEmiter {
   createNewQA = async (req,res) => {
-    const qaData  = (({ spaceId, question, answer}) => ({spaceId, question, answer}))(req.body);
+    const qaData  = (({ spaceId, faqs}) => ({spaceId, faqs}))(req.body);
     try {
       const newQA = await new questionAnswer(qaData);
       await newQA.save();

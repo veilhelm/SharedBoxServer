@@ -4,17 +4,17 @@ const validator = require("validator");
 const questionAnswerSchema = new Schema({
   spaceId: {
     type: Schema.Types.ObjectId,
-    //required: true,
+    required: true,
     ref: "Space"
   },
-  question: {
-    type: String,
-    required: true
-  },
-  answer: { 
-    type: String,
-    required: true
-  }
+  faqs: [{
+    question:{
+      type:String
+    },
+    answer:{
+      type:String
+    }
+  }]
 }, {
   timestamps: true
 })
