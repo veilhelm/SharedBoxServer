@@ -45,7 +45,7 @@ const spaceSchema = new Schema ({
         type:[Schema.Types.ObjectId],
         ref:"SpaceTag"
     },
-    aditionalInfo:{
+    additionalInfo:{
         type:String        
     },
     inventoryId:{
@@ -62,17 +62,26 @@ const spaceSchema = new Schema ({
         ref:"Tenant"
     },
     city:{
-        type:String
+        type:String,
+        required: true,
+        uppercase: true
     },
     address:{
-        type:String
+        type:String,
+        required: true,
+        uppercase: true
     },
     latitude:{
         type:Number        
     },
     longitude:{
         type:Number        
-    }    
+    },
+    title: {
+        type: String,
+        required: true,
+        uppercase: true
+    }   
 },{
     timestamps:true
 })

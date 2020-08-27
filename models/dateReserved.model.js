@@ -24,6 +24,6 @@ const DateReservedSchema = new Schema({
   timestamps: true
 } );
 
-const DateReserved = new model("DateReserved", DateReservedSchema);
+const DateReserved = new model("DatesReserved", DateReservedSchema);
 
 module.exports = DateReserved;
