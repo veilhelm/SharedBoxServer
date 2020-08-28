@@ -3,10 +3,9 @@ const questionAnswer = require("../models/questionAnswer.model");
 
 class QuestionAnswerService extends EventEmiter {
   createNewQA = async (req,res) => {
-    const qaData  = (({ spaceId, question, answer}) => ({spaceId, question, answer}))(req.body);
+    const{newFaqs} = req.body
     try {
-      const newQA = await new questionAnswer(qaData);
-      await newQA.save();
+      const newQA = await questionAnswer.insertMany(newFaqs);
       res.status(201).json(newQA)
     } catch(err) {
       res.status(400).json(err.message)
