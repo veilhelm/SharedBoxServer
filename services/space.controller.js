@@ -1,7 +1,8 @@
 const eventEmiter = require('events')
 const Space = require('../models/space.model')
 const spaceSubscribers = require('../subscribers/space.subscribers')
-const { search } = require('../routes/datesReserved.route')
+const SpaceTag = require("../models/spaceTag.model")
+
 
 const searchTermConstructor = query => {
     const searchTearm = {}
@@ -19,6 +20,20 @@ const searchTermConstructor = query => {
     searchTearm["height"] = {$gte: minHeight, $lte: maxHeight}
     return searchTearm
     }
+
+const filterSpaceByDate = (arrSpaces = [], inDate, finDate) => {
+    return arrSpaces.filter( ({dateReservedId}) => !dateReservedId.some( ({initialDate, finalDate}) => (Date.parse(inDate) < Date.parse(finalDate) && Date.parse(inDate) > Date.parse(initialDate) ) || (Date.parse(finDate) > Date.parse(initialDate) && Date.parse(finDate) < Date.parse(finalDate))))
+}
+
+const filterSpaceByTag = async (arrSpaces = [], tag = []) => {
+      const filterByTag = await SpaceTag.find({name : {$in : tag}})
+      if(arrSpaces.length === 0) {
+          filterByTag.populate("spaces").execPopulate()
+          return filterByTag.spaces()
+      }
+      return arrSpaces.filter(({_id}) => filterByTag.some(({spaces}) => spaces.some(tagSpaceId => tagSpaceId === _id)))
+    }
+    
 
 class SpaceServices extends eventEmiter{
 
@@ -48,10 +63,20 @@ class SpaceServices extends eventEmiter{
     }
 
     getSpaceTenant = async (req, res) => {
-        const response = await Space.find(searchTermConstructor(req.query), null, {}, (err, docs) => {
-            console.log({control: docs})
-        })
-        res.status(200).json(response)
+        const {inDate, finDate, tag} = req.query
+        const tags = tag.split("-")
+        let response
+        try{
+            const foundResponse = await Space.find(searchTermConstructor(req.query))
+            .populate("dateReservedId", ["initialDate", "finalDate", "tenantId"])
+            .populate("spaceTags", ["name","description"])
+            response = foundResponse
+            if(inDate && finDate) response = filterSpaceByDate(foundResponse, inDate, finDate)
+            if(tag) filterSpaceByTag(response, tags)
+            res.status(200).json(response)
+        }catch(err){
+
+        }
     }
     
 }
