@@ -62,17 +62,23 @@ const spaceSchema = new Schema ({
         ref:"Tenant"
     },
     city:{
-        type:String
+        type:String,
+        required: true
     },
     address:{
-        type:String
+        type:String,
+        required: true
     },
     latitude:{
         type:Number        
     },
     longitude:{
         type:Number        
-    }    
+    },
+    title: {
+        type: String,
+        required: true
+    }   
 },{
     timestamps:true
 })

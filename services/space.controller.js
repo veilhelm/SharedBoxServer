@@ -6,9 +6,9 @@ class SpaceServices extends eventEmiter{
 
     createSpace = async (req,res) => {
         const spaceData = (({area,width,length,height,pricePerDay,dateReservedId,spaceTags,aditionalInfo,inventoryId,
-                        lenderId,tenantId,city,address,latitude,longitude})=>({area,width,length, 
+                        lenderId,tenantId,city,address,latitude,longitude,title})=>({area,width,length, 
                             height,pricePerDay,dateReservedId,spaceTags,aditionalInfo,
-                        inventoryId,lenderId,tenantId,city,address,latitude,longitude}))(req.body)
+                        inventoryId,lenderId,tenantId,city,address,latitude,longitude,title}))(req.body)
         
         try{
             const space = await new Space(spaceData)
