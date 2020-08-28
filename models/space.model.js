@@ -38,12 +38,10 @@ const spaceSchema = new Schema ({
         min:0
     },
     dateReservedId:{
-        type:[Schema.Types.ObjectId],
-        ref:"DatesReserved"
+        type:[{type: Schema.Types.ObjectId, ref:"DatesReserved"}] 
     },
     spaceTags:{
-        type:[Schema.Types.ObjectId],
-        ref:"SpaceTag"
+        type:[{type:Schema.Types.ObjectId, ref:"SpaceTag"}]  
     },
     additionalInfo:{
         type:String        

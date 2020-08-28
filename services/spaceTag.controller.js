@@ -1,16 +1,20 @@
 const EventEmitter = require("events");
 const SpaceTag = require("../models/spaceTag.model.js");
+const  spaceTagsSubscribers = require("../subscribers/spaceTags.Subscribers")
 
 class SpaceTagService extends EventEmitter {
   createSpaceTag = async(req,res) => {
-    const spaceData  = (({ tag, description}) => ({tag, description}))(req.body);
+    const spaceData  = (({ name, description, spaces}) => ({name, description, spaces}))(req.body);
     try {
-      const newSpaceTag = await new SpaceTag(spaceData).save();
+      const newSpaceTag = await new SpaceTag(spaceData);
+      await newSpaceTag.setDisplayId()
+      this.emit("spaceTagCreated", newSpaceTag)
       res.status(201).json(newSpaceTag);
     } catch(err) {
       res.status(400).json(err.message)
     }
   }
+
   getSpaceTag = async(req,res) => {
     try {
       const space  = await SpaceTag.find({tag: req.body.tag});
@@ -44,4 +48,6 @@ class SpaceTagService extends EventEmitter {
 }
 
 const spaceTagService = new SpaceTagService();
+spaceTagService.on("spaceTagCreated", spaceTagsSubscribers.addSpaceTagIdToSpace)
+
 module.exports = spaceTagService;

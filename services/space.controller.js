@@ -25,14 +25,11 @@ const filterSpaceByDate = (arrSpaces = [], inDate, finDate) => {
     return arrSpaces.filter( ({dateReservedId}) => !dateReservedId.some( ({initialDate, finalDate}) => (Date.parse(inDate) < Date.parse(finalDate) && Date.parse(inDate) > Date.parse(initialDate) ) || (Date.parse(finDate) > Date.parse(initialDate) && Date.parse(finDate) < Date.parse(finalDate))))
 }
 
-const filterSpaceByTag = async (arrSpaces = [], tag = []) => {
-      const filterByTag = await SpaceTag.find({name : {$in : tag}})
-      if(arrSpaces.length === 0) {
-          filterByTag.populate("spaces").execPopulate()
-          return filterByTag.spaces()
-      }
-      return arrSpaces.filter(({_id}) => filterByTag.some(({spaces}) => spaces.some(tagSpaceId => tagSpaceId === _id)))
-    }
+const filterSpaceByTag = async (arrSpaces = [], tags = []) => {  
+    const filterByTag = await SpaceTag.find({name : {$in : tags}}).populate("spaces")
+    if(arrSpaces.length === 0) return []
+    return arrSpaces.filter(({_id}) => filterByTag.some(({spaces}) => spaces.some(space =>space._id.equals(_id))))
+}
     
 
 class SpaceServices extends eventEmiter{
@@ -64,7 +61,7 @@ class SpaceServices extends eventEmiter{
 
     getSpaceTenant = async (req, res) => {
         const {inDate, finDate, tag} = req.query
-        const tags = tag.split("-")
+        const tags = tag ? tag.split("-") : null
         let response
         try{
             const foundResponse = await Space.find(searchTermConstructor(req.query))
@@ -72,10 +69,11 @@ class SpaceServices extends eventEmiter{
             .populate("spaceTags", ["name","description"])
             response = foundResponse
             if(inDate && finDate) response = filterSpaceByDate(foundResponse, inDate, finDate)
-            if(tag) filterSpaceByTag(response, tags)
+            if(tag) response = await filterSpaceByTag(response, tags)
             res.status(200).json(response)
         }catch(err){
-
+            console.log(err)
+            res.status(400).json(err)
         }
     }
     
