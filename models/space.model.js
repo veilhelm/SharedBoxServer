@@ -38,14 +38,12 @@ const spaceSchema = new Schema ({
         min:0
     },
     dateReservedId:{
-        type:[Schema.Types.ObjectId],
-        ref:"DatesReserved"
+        type:[{type: Schema.Types.ObjectId, ref:"DatesReserved"}] 
     },
     spaceTags:{
-        type:[Schema.Types.ObjectId],
-        ref:"SpaceTag"
+        type:[{type:Schema.Types.ObjectId, ref:"SpaceTag"}]  
     },
-    aditionalInfo:{
+    additionalInfo:{
         type:String        
     },
     inventoryId:{
@@ -63,11 +61,13 @@ const spaceSchema = new Schema ({
     },
     city:{
         type:String,
-        required: true
+        required: true,
+        uppercase: true
     },
     address:{
         type:String,
-        required: true
+        required: true,
+        uppercase: true
     },
     latitude:{
         type:Number        
@@ -77,7 +77,8 @@ const spaceSchema = new Schema ({
     },
     title: {
         type: String,
-        required: true
+        required: true,
+        uppercase: true
     }   
 },{
     timestamps:true

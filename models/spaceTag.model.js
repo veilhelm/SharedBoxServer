@@ -5,18 +5,18 @@ const spaceTagSchema = new Schema({
   name: {
     type: String,
     required: true,
-    unique: true 
+    unique: true
   },
   description: { 
-    type: String
+    type: String,
+    required: true
   },
-  spaces: {
-    type: [Schema.Types.ObjectId],
-    ref: "Space"
+  spaces : {
+    type: [{type: Schema.Types.ObjectId, ref:"Space"}]
   },
   id:{
-   type: String,
-   default: 1
+    type: String,
+    default: 1
   }
 }, {
   timestamps: true

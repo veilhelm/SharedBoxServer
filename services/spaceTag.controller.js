@@ -35,7 +35,7 @@ class SpaceTagService extends EventEmitter {
 
   addSpaceToTag = async (req, res) => {
     try{
-      const tag = await SpaceTag.find({tag: req.body.tag})
+      const tag = await SpaceTag.find({name: req.body.name})
       tag[0].spaces.push(req.body.spaceId)
       await tag[0].save()
       this.emit("spaceTagCreated", tag[0])
