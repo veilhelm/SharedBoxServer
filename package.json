@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "sharedBox Server ",
   "main": "index.js",
-  "scripts": {
+  "scripts": {    
     "dev": " nodemon index.js"
   },
   "author": "veilhelm alexander guarin",
