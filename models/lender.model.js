@@ -14,7 +14,7 @@ const lenderSchema = new Schema ({
         type: String,
         required: true,
         lowercase: true,
-        validate: emailValidators
+        validate: emailValidators("Lender")
     },
     password: {
         type: String,

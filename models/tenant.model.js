@@ -14,7 +14,7 @@ const tenantSchema = new Schema({
         type:String,
         trim:true,
         lowercase:true,
-        validate: emailValidators
+        validate: emailValidators("tenant")
     },
     password:{
         type:String,

@@ -1,15 +1,19 @@
 const validator = require('validator')
 const {models} = require('mongoose')
-const emailValidators = [
-    {
-        validator: (email) => validator.isEmail(email),
-        message: "the email provided is not a valid email"
-    },
-    {
-        validator:  async (email) =>!(await models.Tenant.findOne({email})),
-        message: "the email provided is already registered"
-    }
-]
+const emailValidators = function(typeUser) {
+    return [
+        {
+            validator: (email) => validator.isEmail(email),
+            message: "the email provided is not a valid email"
+        },
+        {
+            validator:  async (email) => typeUser ==="tenant" ? !(await models.Tenant.findOne({email})) : !(await models.Lender.findOne({email})),
+            message: "the email provided is already registered"
+        }
+    ]
+}
+
+
 
 const passwordValidators = function() {
     return [
