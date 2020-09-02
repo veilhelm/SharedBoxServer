@@ -7,7 +7,7 @@ const tenantSchema = new Schema({
     name:{
         type: String,
         trim:true,
-        require:true,
+        required:true,
         uppercase:true
     },
     email:{
