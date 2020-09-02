@@ -7,7 +7,7 @@ const tenantSchema = new Schema({
     name:{
         type: String,
         trim:true,
-        require:true,
+        required:true,
         uppercase:true
     },
     email:{
@@ -22,7 +22,7 @@ const tenantSchema = new Schema({
     },
     password:{
         type:String,
-        require:true,
+        required:true,
         validate: {
             validator(value){
                 if(this.email.split(/\.|\@|_|-/g).some(word => value.includes(word) && word !== "com" ) || value.length < 6 || !/\d/.test(value)) return false
@@ -33,7 +33,7 @@ const tenantSchema = new Schema({
     phoneNumber:{
         type:String,
         trim:true,
-        require:true,
+        required:true,
         minlength:10,
         maxlength:13
     },
