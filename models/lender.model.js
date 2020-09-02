@@ -33,8 +33,7 @@ const lenderSchema = new Schema ({
         default: false
     },
     scores:{
-        type: [Schema.Types.ObjectId],
-        ref: "Score"
+        type:[{type: Schema.Types.ObjectId, ref:"Score"}] 
     },
     averageScore:{
         type: Number,
