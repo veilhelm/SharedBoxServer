@@ -45,7 +45,7 @@ class SpaceServices extends eventEmiter{
             space.monthCalculation()
             space.lenderId = req.lender._id
             await space.save()
-            this.emit("spaceCreated", space )   
+            this.emit("spaceCreated", space )
             res.status(200).json(space)
         }
         catch(err){
