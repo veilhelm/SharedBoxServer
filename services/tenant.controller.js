@@ -3,7 +3,7 @@ const Tenant =require("../models/tenant.model")
 const bcrypt = require("bcrypt")
 const subcriberTenant = require("../subscribers/tenant.subscribers")
 const tenantSubscribers = require("../subscribers/tenant.subscribers")
-const { json } = require("express")
+
 
 class TenantServices extends EventEmiter{
     createNewTenant = async (req,res) => {
