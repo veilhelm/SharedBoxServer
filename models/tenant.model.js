@@ -14,7 +14,6 @@ const tenantSchema = new Schema({
         type:String,
         trim:true,
         lowercase:true,
-        unique:true,
         validator(value){
             if(!validator.isEmail(value)) return false
         },
