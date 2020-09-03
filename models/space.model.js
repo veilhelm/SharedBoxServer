@@ -80,8 +80,8 @@ const spaceSchema = new Schema ({
         required: true,
         uppercase: true
     },
-    images: {
-        type: [{ type: String, ref: "Photos" }]
+    photos: {
+        type: [{ type: String }]
     }   
 },{
     timestamps:true
