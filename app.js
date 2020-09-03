@@ -6,6 +6,7 @@ const dateReservedRouter = require("./routes/datesReserved.route")
 const spaceRouter = require("./routes/space.route")
 const spaceTagsRouter = require("./routes/spaceTag.route")
 const questionsAnswersRouter = require("./routes/questionsAnswers.route")
+const tenantRouter = require("./routes/tenant.route")
 const scoreRouter = require("./routes/score.route")
 const morgan = require("morgan")
 const helmet = require("helmet")
@@ -32,6 +33,8 @@ app.use("/space", spaceRouter)
 app.use("/spaceTags", spaceTagsRouter)
 
 app.use("/queAns", questionsAnswersRouter)
+
+app.use("/tenant", tenantRouter)
 
 app.use("/score", scoreRouter)
 module.exports = app

@@ -43,7 +43,7 @@ class SpaceServices extends eventEmiter{
         try{
             const space = await new Space(spaceData)
             space.monthCalculation()
-            space.lenderId = req.lender._id
+            space.lenderId = req.user._id
             await space.save()
             this.emit("spaceCreated", space )   
             res.status(200).json(space)
@@ -54,7 +54,7 @@ class SpaceServices extends eventEmiter{
     }
     
     getSpaceOfLender = async(req,res)=>{
-        const lenderId = req.lender._id
+        const lenderId = req.user._id
         const spaces = await Space.find({lenderId})
         res.status(200).json(spaces)
     }

@@ -32,14 +32,14 @@ class LenderService extends EventEmiter {
     }
 
     getLender = async (req, res) => {
-        res.status(200).json(req.lender)
+        res.status(200).json(req.user)
     }
 
     updateLender = async (req, res) => {
-        if(req.body.password) req.lender.passwordIsEncrypted = false
-        Object.keys(req.body).forEach( param => req.lender[param] = req.body[param])
+        if(req.body.password) req.user.passwordIsEncrypted = false
+        Object.keys(req.body).forEach( param => req.user[param] = req.body[param])
         try{
-            const updatedLender = await req.lender.save()
+            const updatedLender = await req.user.save()
             this.emit("lenderUpdated")
             res.json(updatedLender)
         }catch(err){
