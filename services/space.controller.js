@@ -13,7 +13,7 @@ const searchTermConstructor = query => {
     const [minArea, maxArea] = query.area ? query.area.split("-") : [0, 40000]
     const [minWidth, maxWidth] = query.width ? query.width.split("-") : [0, 200]
     const [minLength, maxLength] = query.length ? query.length.split("-") : [0, 200]
-    const [minHeight, maxHeight] = query.height ? query.height.split("-") : [0, 200]
+    const [minHeight, maxHeight] = query.height ? query.height.split("-") : [0, 10]
     searchTearm["area"] = {$gte: minArea, $lte: maxArea}
     searchTearm["width"] = {$gte: minWidth, $lte: maxWidth}
     searchTearm["length"] = {$gte: minLength, $lte: maxLength}
@@ -26,8 +26,8 @@ const filterSpaceByDate = (arrSpaces = [], inDate, finDate) => {
 }
 
 const filterSpaceByTag = async (arrSpaces = [], tags = []) => {  
-    const filterByTag = await SpaceTag.find({name : {$in : tags}}).populate("spaces")
     if(arrSpaces.length === 0) return []
+    const filterByTag = await SpaceTag.find({name : {$in : tags}}).populate("spaces")
     return arrSpaces.filter(({_id}) => filterByTag.some(({spaces}) => spaces.some(space =>space._id.equals(_id))))
 }
     
