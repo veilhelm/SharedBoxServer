@@ -1,7 +1,12 @@
 FROM node:latest
+
 WORKDIR /usr/src/
-COPY . . 
+
+COPY . .
+
 RUN npm install
-# EXPOSE 4000
-# VOLUME /usr/src/
-CMD ["npm", "run dev"]
+
+EXPOSE 4000
+
+CMD ["npm", "run", "dev"]
+
