@@ -9,7 +9,6 @@ const spaceTagSchema = new Schema({
   },
   description: { 
     type: String,
-    required: true
   },
   spaces : {
     type: [{type: Schema.Types.ObjectId, ref:"Space"}]

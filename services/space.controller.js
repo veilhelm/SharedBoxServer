@@ -45,7 +45,7 @@ class SpaceServices extends eventEmiter{
             space.monthCalculation()
             space.lenderId = req.user._id
             await space.save()
-            this.emit("spaceCreated", space )   
+            this.emit("spaceCreated", space )
             res.status(200).json(space)
         }
         catch(err){
@@ -72,6 +72,26 @@ class SpaceServices extends eventEmiter{
             if(tag) response = await filterSpaceByTag(response, tags)
             res.status(200).json(response)
         }catch(err){
+            console.log(err)
+            res.status(400).json(err)
+        }
+    }
+
+    savePhotos = async (req,res) => {
+        const {spaceId} = req.body
+        const files = Object.keys(req.body)
+        files.shift()
+        try{
+            
+            const space = await Space.findById(spaceId)
+            files.map(file => {
+                console.log(req.body[file].secure_url)
+                space.photos.push(req.body[file].secure_url)
+            })
+            space.save()
+            res.status(200).json(space)
+        }
+        catch(err){
             console.log(err)
             res.status(400).json(err)
         }
