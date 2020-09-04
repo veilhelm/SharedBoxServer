@@ -56,6 +56,8 @@ class SpaceServices extends eventEmiter{
     getSpaceOfLender = async(req,res)=>{
         const lenderId = req.user._id
         const spaces = await Space.find({lenderId})
+        .populate("spaceTags", ["name","description"])
+        .populate("dateReservedId", ["initialDate", "finalDate"])
         res.status(200).json(spaces)
     }
 
