@@ -4,7 +4,8 @@
   "description": "sharedBox Server ",
   "main": "index.js",
   "scripts": {    
-    "dev": " nodemon index.js"
+    "dev": " nodemon index.js",
+    "dbInit": "C:\\\"Program Files\"\\MongoDB\\Server\\4.2\\bin\\mongod.exe --dbpath=D:/Donaldo/mongodb-data"
   },
   "author": "veilhelm alexander guarin",
   "license": "ISC",
