@@ -1,6 +1,6 @@
 const { Schema , model } = require("mongoose")
 const jwt = require("jsonwebtoken")
-const bcript = require("bcrypt")
+const bcrypt = require("bcrypt")
 const {emailValidators, passwordValidators} = require ("../utils/validators")
 
 
@@ -72,7 +72,7 @@ lenderSchema.methods.generateAuthToken = async function () {
 }
 
 lenderSchema.methods.encryptPassword = async function () {
-    this.password = await bcript.hash(this.password, 8)
+    this.password = await bcrypt.hash(this.password, 8)
     return this.password
 }
 
