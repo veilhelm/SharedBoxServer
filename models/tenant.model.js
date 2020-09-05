@@ -1,5 +1,5 @@
 const {Schema , model} =require('mongoose')
-const bcript = require('bcrypt')
+const bcrypt = require('bcrypt')
 const jwt =require('jsonwebtoken')
 const {emailValidators, passwordValidators} = require("../utils/validators")
  
@@ -68,7 +68,7 @@ tenantSchema.methods.generateAuthToken = async function () {
 }
 
 tenantSchema.methods.encryptPassword = async function () {
-    this.password = await bcript.hash(this.password, 8)
+    this.password = await bcrypt.hash(this.password, 8)
     return this.password
 }
 

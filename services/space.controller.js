@@ -2,6 +2,7 @@ const eventEmiter = require('events')
 const Space = require('../models/space.model')
 const spaceSubscribers = require('../subscribers/space.subscribers')
 const SpaceTag = require("../models/spaceTag.model")
+const space = require('../models/space.model')
 
 
 const searchTermConstructor = query => {
@@ -74,7 +75,17 @@ class SpaceServices extends eventEmiter{
             if(tag) response = await filterSpaceByTag(response, tags)
             res.status(200).json(response)
         }catch(err){
-            console.log(err)
+            res.status(400).json(err)
+        }
+    }
+
+    updateSpace = async (req, res) => {
+        if(!req.user.spaces.includes(req.body.spaceId)) return res.status(401).json("the user is not authorized to make changes to this space")
+        try {
+            const space = await Space.find({_id: req.body.spaceId})
+            const updateSuccesful = await space.updateOne({...req.body.fields})
+            res.status(200).json(updateSuccesful)
+        }catch(err){
             res.status(400).json(err)
         }
     }
