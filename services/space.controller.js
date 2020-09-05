@@ -13,7 +13,7 @@ const searchTermConstructor = query => {
     const [minArea, maxArea] = query.area ? query.area.split("-") : [0, 40000]
     const [minWidth, maxWidth] = query.width ? query.width.split("-") : [0, 200]
     const [minLength, maxLength] = query.length ? query.length.split("-") : [0, 200]
-    const [minHeight, maxHeight] = query.height ? query.height.split("-") : [0, 200]
+    const [minHeight, maxHeight] = query.height ? query.height.split("-") : [0, 10]
     searchTearm["area"] = {$gte: minArea, $lte: maxArea}
     searchTearm["width"] = {$gte: minWidth, $lte: maxWidth}
     searchTearm["length"] = {$gte: minLength, $lte: maxLength}
@@ -26,8 +26,8 @@ const filterSpaceByDate = (arrSpaces = [], inDate, finDate) => {
 }
 
 const filterSpaceByTag = async (arrSpaces = [], tags = []) => {  
-    const filterByTag = await SpaceTag.find({name : {$in : tags}}).populate("spaces")
     if(arrSpaces.length === 0) return []
+    const filterByTag = await SpaceTag.find({name : {$in : tags}}).populate("spaces")
     return arrSpaces.filter(({_id}) => filterByTag.some(({spaces}) => spaces.some(space =>space._id.equals(_id))))
 }
     
@@ -45,7 +45,7 @@ class SpaceServices extends eventEmiter{
             space.monthCalculation()
             space.lenderId = req.user._id
             await space.save()
-            this.emit("spaceCreated", space )   
+            this.emit("spaceCreated", space )
             res.status(200).json(space)
         }
         catch(err){
@@ -56,6 +56,8 @@ class SpaceServices extends eventEmiter{
     getSpaceOfLender = async(req,res)=>{
         const lenderId = req.user._id
         const spaces = await Space.find({lenderId})
+        .populate("spaceTags", ["name","description"])
+        .populate("dateReservedId", ["initialDate", "finalDate"])
         res.status(200).json(spaces)
     }
 
@@ -72,6 +74,26 @@ class SpaceServices extends eventEmiter{
             if(tag) response = await filterSpaceByTag(response, tags)
             res.status(200).json(response)
         }catch(err){
+            console.log(err)
+            res.status(400).json(err)
+        }
+    }
+
+    savePhotos = async (req,res) => {
+        const {spaceId} = req.body
+        const files = Object.keys(req.body)
+        files.shift()
+        try{
+            
+            const space = await Space.findById(spaceId)
+            files.map(file => {
+                console.log(req.body[file].secure_url)
+                space.photos.push(req.body[file].secure_url)
+            })
+            space.save()
+            res.status(200).json(space)
+        }
+        catch(err){
             console.log(err)
             res.status(400).json(err)
         }

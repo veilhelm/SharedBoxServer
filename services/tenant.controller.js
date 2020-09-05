@@ -11,10 +11,13 @@ class TenantServices extends EventEmiter{
       const dataTenant = (({name,email,phoneNumber,password})=>({name,email,phoneNumber,password}))(req.body)
       
       try{
-         const tenant = await new Tenant(dataTenant)
-          const token = await tenant.generateAuthToken()
-          this.emit("createTenant")
-          res.status(200).json(token)
+            const tenant = await new Tenant(dataTenant)
+            const token = await tenant.generateAuthToken()
+            await tenant.encryptPassword()
+            tenant.tokens.push(token)
+            await tenant.save()
+            this.emit("createTenant")
+            res.status(201).json(token)
       }
       catch(err){
           res.status(400).json(err.message)
@@ -27,6 +30,7 @@ class TenantServices extends EventEmiter{
             const validPass = await bcrypt.compare(password,tenant.password || "" )
             if (Object.keys(tenant).length === 0 || !validPass) throw Error("email and password incorrect")
             const token = await tenant.generateAuthToken()
+            await tenant.updateOne({tokens: [...tenant.tokens, token]})
             res.status(200).json(token)
 
         }catch(err){
@@ -36,18 +40,19 @@ class TenantServices extends EventEmiter{
     getInfoTenant = async(req,res)=>{
         res.status(200).json(req.user)
     }
-    updateTenant = async (req,res)=>{
-        if(req.body.password) req.user.passwordIsEncrypted = false
-        Object.keys(req.body).forEach( param => req.user[param] = req.body[param])
+    updateTenant = async (req,res)=> {
+        if(req.body.password){
+            req.user.password = req.body.password
+            req.body.password = await req.user.encryptPassword()
+        } 
         try{
-            const updateTenant = await req.user.save()
+            const updateSuccesful = await req.user.updateOne({...req.body})
             this.emit("updateTenant")
-            res.status(200).json(updateTenant)
-        }
-        catch(err){
+            res.status(200).json(updateSuccesful)
+        }catch(err){
+            console.dir(err)
             res.status(400).json(err.message)
         }
-        
     }
 }
 const tenantServices = new TenantServices()
