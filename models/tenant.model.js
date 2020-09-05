@@ -52,7 +52,16 @@ const tenantSchema = new Schema({
         {
             type:String
         }
-    ]
+    ],
+    country:{
+        type: String,
+        default: "Colombia"
+    },
+    city: {
+        type: String
+    }
+},{
+    timestamps: true
 })
 tenantSchema.methods.generateAuthToken = async function () {
     return jwt.sign({_id: this._id.toString()}, process.env.SECRET_KEY, {expiresIn: "1 days"})
