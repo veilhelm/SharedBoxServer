@@ -1,6 +1,6 @@
 const { Schema , model } = require("mongoose")
 const jwt = require("jsonwebtoken")
-const bcript = require("bcrypt")
+const bcrypt = require("bcrypt")
 const {emailValidators, passwordValidators} = require ("../utils/validators")
 
 
@@ -68,22 +68,17 @@ const lenderSchema = new Schema ({
 })
 
 lenderSchema.methods.generateAuthToken = async function () {
-    const token = jwt.sign({_id: this._id.toString()}, process.env.SECRET_KEY, {expiresIn: "1 days"})
-    this.tokens = this.tokens.concat(token)
-    await this.save()
-    return token
+    return jwt.sign({_id: this._id.toString()}, process.env.SECRET_KEY, {expiresIn: "1 days"})
+}
+
+lenderSchema.methods.encryptPassword = async function () {
+    this.password = await bcrypt.hash(this.password, 8)
+    return this.password
 }
 
 lenderSchema.methods.getPublicData = function () {
     return (({name, email, tokens, tasks}) => ({name, email, tokens, tasks}))(this) 
 }
-
-lenderSchema.pre("save", async function(){
-    if(!this.passwordIsEncrypted){
-        this.password = await bcript.hash(this.password, 8)
-        this.passwordIsEncrypted = true
-    }
-})
 
 const Lender = new model("Lender", lenderSchema)
 

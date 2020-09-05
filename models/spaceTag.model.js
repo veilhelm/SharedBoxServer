@@ -8,7 +8,7 @@ const spaceTagSchema = new Schema({
     unique: true
   },
   description: { 
-    type: String
+    type: String,
   },
   spaces : {
     type: [{type: Schema.Types.ObjectId, ref:"Space"}]
