@@ -82,11 +82,9 @@ class SpaceServices extends eventEmiter{
     updateSpace = async (req, res) => {
         try {
             const space = await Space.find({_id: req.body.spaceId})
-            console.log(space)
             const updateSuccesful = await space[0].updateOne({...req.body.fields})
             res.status(200).json(updateSuccesful)
         }catch(err){
-            console.dir(err)
             res.status(400).json(err)
         }
     }
