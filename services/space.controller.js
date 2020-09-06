@@ -80,10 +80,9 @@ class SpaceServices extends eventEmiter{
     }
 
     updateSpace = async (req, res) => {
-        if(!req.user.spaces.includes(req.body.spaceId)) return res.status(401).json("the user is not authorized to make changes to this space")
         try {
             const space = await Space.find({_id: req.body.spaceId})
-            const updateSuccesful = await space.updateOne({...req.body.fields})
+            const updateSuccesful = await space[0].updateOne({...req.body.fields})
             res.status(200).json(updateSuccesful)
         }catch(err){
             res.status(400).json(err)
