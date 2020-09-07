@@ -130,14 +130,12 @@ class SpaceServices extends eventEmiter{
     deletePhotos = async (req,res)=> {
         const {photo, spaceId} = req.body
         try{
-            console.log(photo)
-            console.log(spaceId)
             const space= await Space.findById(spaceId)
-            console.log(space)
+            
             const newSpacePhotos = space.photos.filter(spacePhoto => spacePhoto !== photo)
             space.photos = newSpacePhotos
             await space.save()
-            console.log(space)
+            
             res.status(200).json("succesful deleting"+ photo)
         }
         catch(err){
