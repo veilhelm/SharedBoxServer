@@ -108,6 +108,40 @@ class SpaceServices extends eventEmiter{
             res.status(400).json(err)
         }
     }
+
+    savePhotos = async (req,res) => {
+        const {spaceId} = req.body
+        const files = Object.keys(req.body)
+        files.shift()
+        try{
+            
+            const space = await Space.findById(spaceId)
+            files.map(file => {
+                space.photos.push(req.body[file].secure_url)
+            })
+            await space.save()
+            res.status(200).json(space.photos)
+        }
+        catch(err){
+            res.status(400).json(err)
+        }
+    }
+
+    deletePhotos = async (req,res)=> {
+        const {photo, spaceId} = req.body
+        try{
+            const space= await Space.findById(spaceId)
+            
+            const newSpacePhotos = space.photos.filter(spacePhoto => spacePhoto !== photo)
+            space.photos = newSpacePhotos
+            await space.save()
+            
+            res.status(200).json("succesful deleting"+ photo)
+        }
+        catch(err){
+            res.status(400).json(err)
+        }
+    }
     
 }
 const spaceServices = new SpaceServices()
