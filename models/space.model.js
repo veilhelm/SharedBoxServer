@@ -81,7 +81,7 @@ const spaceSchema = new Schema ({
         uppercase: true
     },
     photos: {
-        type: [{ type: String }]
+        type: [ String ]
     }   
 },{
     timestamps:true
