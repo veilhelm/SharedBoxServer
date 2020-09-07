@@ -1,7 +1,8 @@
 const { Schema , model } = require("mongoose")
 const jwt = require("jsonwebtoken")
-const bcript = require("bcrypt")
-const validator = require("validator")
+const bcrypt = require("bcrypt")
+const {emailValidators, passwordValidators} = require ("../utils/validators")
+
 
 const lenderSchema = new Schema ({
     name:{
@@ -13,24 +14,12 @@ const lenderSchema = new Schema ({
         type: String,
         required: true,
         lowercase: true,
-        unique: true,
-        validate: {
-            validator(value){
-                if(!validator.isEmail(value)) return false
-            },
-            message: "the email provided is not a valid email"
-        }
+        validate: emailValidators("Lender")
     },
     password: {
         type: String,
         required: true,
-        validate: {
-            validator(value){
-                if(this.email.split(/\.|\@|_|-/g).some(word => value.includes(word) && word !== "com" ) || value.length < 6 || !/\d/.test(value)) return false
-            },
-            message: "password must be 6 characters long, contain at least one digit number and cannot contain words used in the email"
-        }
-
+        validate: passwordValidators.bind(this)
     },
     phoneNumber: {
         type: String,
@@ -79,22 +68,17 @@ const lenderSchema = new Schema ({
 })
 
 lenderSchema.methods.generateAuthToken = async function () {
-    const token = jwt.sign({_id: this._id.toString()}, process.env.SECRET_KEY, {expiresIn: "1 days"})
-    this.tokens = this.tokens.concat(token)
-    await this.save()
-    return token
+    return jwt.sign({_id: this._id.toString()}, process.env.SECRET_KEY, {expiresIn: "1 days"})
+}
+
+lenderSchema.methods.encryptPassword = async function () {
+    this.password = await bcrypt.hash(this.password, 8)
+    return this.password
 }
 
 lenderSchema.methods.getPublicData = function () {
     return (({name, email, tokens, tasks}) => ({name, email, tokens, tasks}))(this) 
 }
-
-lenderSchema.pre("save", async function(){
-    if(!this.passwordIsEncrypted){
-        this.password = await bcript.hash(this.password, 8)
-        this.passwordIsEncrypted = true
-    }
-})
 
 const Lender = new model("Lender", lenderSchema)
 

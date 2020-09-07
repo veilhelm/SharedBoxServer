@@ -10,9 +10,13 @@ class LenderService extends EventEmiter {
         try{
             const lender = await new Lender(lenderData)
             const token = await lender.generateAuthToken()
+            await lender.encryptPassword()
+            lender.tokens.push(token)
+            await lender.save()
             this.emit("lenderCreated")
             res.status(201).json(token)
         }catch(err){
+            console.dir(err)
             res.status(400).json(err.message)
         }
     }
@@ -24,25 +28,30 @@ class LenderService extends EventEmiter {
             const isValid = await bcrypt.compare(password, lender.password || "" )
             if(Object.keys(lender).length === 0 || !isValid) throw Error("the email or password is incorrect")
             const token = await lender.generateAuthToken()
+            await lender.updateOne({tokens: [...lender.tokens, token]})
             this.emit("lenderLoged")
             res.status(200).json(token)
         }catch(err){
+            console.dir(err)
             res.status(401).json(err.message)
         }
     }
 
     getLender = async (req, res) => {
-        res.status(200).json(req.lender)
+        res.status(200).json(req.user)
     }
 
     updateLender = async (req, res) => {
-        if(req.body.password) req.lender.passwordIsEncrypted = false
-        Object.keys(req.body).forEach( param => req.lender[param] = req.body[param])
+        if(req.body.password){
+            req.user.password = req.body.password
+            req.body.password = await req.user.encryptPassword()
+        } 
         try{
-            const updatedLender = await req.lender.save()
+            const updateSuccesful = await req.user.updateOne({...req.body})
             this.emit("lenderUpdated")
-            res.json(updatedLender)
+            res.status(200).json(updateSuccesful)
         }catch(err){
+            console.dir(err)
             res.status(400).json(err.message)
         }
     }
