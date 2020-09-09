@@ -2,7 +2,7 @@ const eventEmiter = require('events')
 const Space = require('../models/space.model')
 const spaceSubscribers = require('../subscribers/space.subscribers')
 const SpaceTag = require("../models/spaceTag.model")
-const space = require('../models/space.model')
+
 
 
 const searchTermConstructor = query => {
@@ -59,6 +59,7 @@ class SpaceServices extends eventEmiter{
         const spaces = await Space.find({lenderId})
         .populate("spaceTags", ["name","description"])
         .populate("dateReservedId", ["initialDate", "finalDate"])
+        .populate("faqs",["question","answer"])
         res.status(200).json(spaces)
     }
 
@@ -97,26 +98,6 @@ class SpaceServices extends eventEmiter{
             
             const space = await Space.findById(spaceId)
             files.map(file => {
-                console.log(req.body[file].secure_url)
-                space.photos.push(req.body[file].secure_url)
-            })
-            space.save()
-            res.status(200).json(space)
-        }
-        catch(err){
-            console.log(err)
-            res.status(400).json(err)
-        }
-    }
-
-    savePhotos = async (req,res) => {
-        const {spaceId} = req.body
-        const files = Object.keys(req.body)
-        files.shift()
-        try{
-            
-            const space = await Space.findById(spaceId)
-            files.map(file => {
                 space.photos.push(req.body[file].secure_url)
             })
             await space.save()
@@ -126,6 +107,7 @@ class SpaceServices extends eventEmiter{
             res.status(400).json(err)
         }
     }
+
 
     deletePhotos = async (req,res)=> {
         const {photo, spaceId} = req.body
