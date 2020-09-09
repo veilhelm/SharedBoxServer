@@ -7,6 +7,7 @@ const space = require('../models/space.model')
 
 const searchTermConstructor = query => {
     const searchTearm = {}
+    if(query._id) searchTearm["_id"] = query._id
     if(query.location) searchTearm["city"] = query.location
     if(query.pricePerDay) searchTearm["pricePerDay"] =  {$lte: query.pricePerDay}
     if(query.pricePerMonth) searchTearm["pricePermonth"] =  {$lte: query.pricePerMonth}
