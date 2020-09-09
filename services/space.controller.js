@@ -2,7 +2,7 @@ const eventEmiter = require('events')
 const Space = require('../models/space.model')
 const spaceSubscribers = require('../subscribers/space.subscribers')
 const SpaceTag = require("../models/spaceTag.model")
-const space = require('../models/space.model')
+
 
 
 const searchTermConstructor = query => {
