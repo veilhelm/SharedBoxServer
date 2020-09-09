@@ -4,6 +4,7 @@ const validator = require("validator");
 const questionAnswerSchema = new Schema({
   spaceId: {
     type: Schema.Types.ObjectId, 
+    required: true,
     ref: "Space"
   },
   question:{
