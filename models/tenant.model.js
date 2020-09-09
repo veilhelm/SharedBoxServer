@@ -1,7 +1,7 @@
 const {Schema , model} =require('mongoose')
-const bycript = require('bcrypt')
+const bcrypt = require('bcrypt')
 const jwt =require('jsonwebtoken')
-const validator = require('validator')
+const {emailValidators, passwordValidators} = require("../utils/validators")
  
 const tenantSchema = new Schema({
     name:{
@@ -14,20 +14,12 @@ const tenantSchema = new Schema({
         type:String,
         trim:true,
         lowercase:true,
-        validator(value){
-            if(!validator.isEmail(value)) return false
-        },
-        message: "the email provided is not a valid email"
+        validate: emailValidators("tenant")
     },
     password:{
         type:String,
         required:true,
-        validate: {
-            validator(value){
-                if(this.email.split(/\.|\@|_|-/g).some(word => value.includes(word) && word !== "com" ) || value.length < 6 || !/\d/.test(value)) return false
-            },
-            message: "password must be 6 characters long, contain at least one digit number and cannot contain words used in the email"
-        }
+        validate: passwordValidators.bind(this)
     },
     phoneNumber:{
         type:String,
@@ -60,19 +52,25 @@ const tenantSchema = new Schema({
         {
             type:String
         }
-    ]
+    ],
+    country:{
+        type: String,
+        default: "Colombia"
+    },
+    city: {
+        type: String
+    }
+},{
+    timestamps: true
 })
 tenantSchema.methods.generateAuthToken = async function () {
-    const token = jwt.sign({_id: this._id.toString()}, process.env.SECRET_KEY, {expiresIn: "1 days"})
-    this.tokens = this.tokens.concat(token)
-    await this.save()
-    return token
+    return jwt.sign({_id: this._id.toString()}, process.env.SECRET_KEY, {expiresIn: "1 days"})
 }
-tenantSchema.pre("save", async function(){
-    if(!this.passwordIsEncrypted){
-        this.password = await bycript.hash(this.password, 8)
-        this.passwordIsEncrypted = true
-    }
-})
+
+tenantSchema.methods.encryptPassword = async function () {
+    this.password = await bcrypt.hash(this.password, 8)
+    return this.password
+}
+
 const Tenant = new model("Tenant", tenantSchema)
 module.exports = Tenant

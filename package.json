@@ -3,13 +3,15 @@
   "version": "1.0.0",
   "description": "sharedBox Server ",
   "main": "index.js",
-  "scripts": {    
+  "scripts": {
     "dev": " nodemon index.js"
   },
   "author": "veilhelm alexander guarin",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.0",
+    "busboy": "^0.3.1",
+    "cloudinary": "^1.23.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
