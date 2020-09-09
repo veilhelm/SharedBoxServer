@@ -59,6 +59,7 @@ class SpaceServices extends eventEmiter{
         const spaces = await Space.find({lenderId})
         .populate("spaceTags", ["name","description"])
         .populate("dateReservedId", ["initialDate", "finalDate"])
+        .populate("faqs",["question","answer"])
         res.status(200).json(spaces)
     }
 
@@ -109,23 +110,6 @@ class SpaceServices extends eventEmiter{
         }
     }
 
-    savePhotos = async (req,res) => {
-        const {spaceId} = req.body
-        const files = Object.keys(req.body)
-        files.shift()
-        try{
-            
-            const space = await Space.findById(spaceId)
-            files.map(file => {
-                space.photos.push(req.body[file].secure_url)
-            })
-            await space.save()
-            res.status(200).json(space.photos)
-        }
-        catch(err){
-            res.status(400).json(err)
-        }
-    }
 
     deletePhotos = async (req,res)=> {
         const {photo, spaceId} = req.body
