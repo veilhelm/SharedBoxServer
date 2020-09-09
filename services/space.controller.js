@@ -98,14 +98,12 @@ class SpaceServices extends eventEmiter{
             
             const space = await Space.findById(spaceId)
             files.map(file => {
-                console.log(req.body[file].secure_url)
                 space.photos.push(req.body[file].secure_url)
             })
-            space.save()
-            res.status(200).json(space)
+            await space.save()
+            res.status(200).json(space.photos)
         }
         catch(err){
-            console.log(err)
             res.status(400).json(err)
         }
     }
