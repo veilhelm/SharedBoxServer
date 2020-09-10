@@ -16,7 +16,6 @@ class LenderService extends EventEmiter {
             this.emit("lenderCreated")
             res.status(201).json(token)
         }catch(err){
-            console.dir(err)
             res.status(400).json(err.message)
         }
     }
@@ -32,7 +31,6 @@ class LenderService extends EventEmiter {
             this.emit("lenderLoged")
             res.status(200).json(token)
         }catch(err){
-            console.dir(err)
             res.status(401).json(err.message)
         }
     }
@@ -51,7 +49,6 @@ class LenderService extends EventEmiter {
             this.emit("lenderUpdated")
             res.status(200).json(updateSuccesful)
         }catch(err){
-            console.dir(err)
             res.status(400).json(err.message)
         }
     }

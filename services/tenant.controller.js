@@ -8,19 +8,18 @@ const tenantSubscribers = require("../subscribers/tenant.subscribers")
 
 class TenantServices extends EventEmiter{
     createNewTenant = async (req,res) => {
-      const dataTenant = (({name,email,phoneNumber,password})=>({name,email,phoneNumber,password}))(req.body)
-      
+      const dataTenant = (({name,email,phoneNumber,password, notifications})=>({name,email,phoneNumber,password, notifications}))(req.body)      
       try{
-            const tenant = await new Tenant(dataTenant)
-            const token = await tenant.generateAuthToken()
-            await tenant.encryptPassword()
-            tenant.tokens.push(token)
-            await tenant.save()
-            this.emit("createTenant")
-            res.status(201).json(token)
+        const tenant = await new Tenant(dataTenant)
+        const token = await tenant.generateAuthToken()
+        await tenant.encryptPassword()
+        tenant.tokens.push(token)
+        await tenant.save()
+        this.emit("createTenant")
+        res.status(201).json(token)
       }
       catch(err){
-          res.status(400).json(err.message)
+        res.status(400).json(err.message)
       }
     }
     loginTenant = async(req,res)=>{

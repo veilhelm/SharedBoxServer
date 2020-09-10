@@ -3,6 +3,7 @@ const { Schema ,model} = require("mongoose");
 const notificationSchema = new Schema ({
   lenderId:{
     type:Schema.Types.ObjectId,
+    required: true,
     ref:"Lender"
   },
   tenantId:{
