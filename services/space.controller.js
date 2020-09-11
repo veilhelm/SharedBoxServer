@@ -7,6 +7,7 @@ const SpaceTag = require("../models/spaceTag.model")
 
 const searchTermConstructor = query => {
     const searchTearm = {}
+    if(query._id) searchTearm["_id"] = query._id
     if(query.location) searchTearm["city"] = query.location
     if(query.pricePerDay) searchTearm["pricePerDay"] =  {$lte: query.pricePerDay}
     if(query.pricePerMonth) searchTearm["pricePermonth"] =  {$lte: query.pricePerMonth}
@@ -71,6 +72,7 @@ class SpaceServices extends eventEmiter{
             const foundResponse = await Space.find(searchTermConstructor(req.query))
             .populate("dateReservedId", ["initialDate", "finalDate", "tenantId"])
             .populate("spaceTags", ["name","description"])
+            .populate("faqs", ["question", "answer"])
             response = foundResponse
             if(inDate && finDate) response = filterSpaceByDate(foundResponse, inDate, finDate)
             if(tag) response = await filterSpaceByTag(response, tags)
