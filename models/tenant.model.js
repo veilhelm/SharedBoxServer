@@ -59,6 +59,9 @@ const tenantSchema = new Schema({
     },
     city: {
         type: String
+    },
+    notifications: {
+        type: [{type: Schema.Types.ObjectId, ref:"Notification"}]
     }
 },{
     timestamps: true
