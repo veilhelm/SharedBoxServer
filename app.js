@@ -8,6 +8,7 @@ const spaceTagsRouter = require("./routes/spaceTag.route")
 const questionsAnswersRouter = require("./routes/questionsAnswers.route")
 const tenantRouter = require("./routes/tenant.route")
 const scoreRouter = require("./routes/score.route")
+const elementRouter = require("./routes/element.route")
 const morgan = require("morgan")
 const helmet = require("helmet")
 
@@ -37,4 +38,7 @@ app.use("/queAns", questionsAnswersRouter)
 app.use("/tenant", tenantRouter)
 
 app.use("/score", scoreRouter)
+
+app.use("/element", elementRouter)
+
 module.exports = app
