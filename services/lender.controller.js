@@ -56,8 +56,7 @@ class LenderService extends EventEmiter {
     deleteLender = async(req,res) => {        
         try {
             const lenderId = req.user._id;
-            const lender = await Tenant.findByIdAndDelete(lenderId)  
-            console.log(lender) 
+            const lender = await Tenant.findByIdAndDelete(lenderId)
             this.emit("deleteLender",lender)
             res.status(200).json("Lender sucessfully deleted") 
         } catch (err){
