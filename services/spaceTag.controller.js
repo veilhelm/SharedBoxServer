@@ -37,12 +37,12 @@ class SpaceTagService extends EventEmitter {
     try{
       const tag = await SpaceTag.find({name: req.body.name})
       tag[0].spaces.push(req.body.spaceId)
-      await tag[0].save()
+      await tag[0].save({ validateBeforeSave: false })
       this.emit("spaceTagCreated", tag[0])
       res.status(200).json(true)
       }catch(error){
         console.log(error)
-      res.status(400).json({error})
+      res.status(400).json(error)
       }
   }
 }

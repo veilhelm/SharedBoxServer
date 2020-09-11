@@ -37,12 +37,10 @@ const filterSpaceByTag = async (arrSpaces = [], tags = []) => {
 class SpaceServices extends eventEmiter{
 
     createSpace = async (req,res) => {
-        const spaceData = (({area,width,length,height,pricePerDay,dateReservedId,spaceTags,additionalInfo,inventoryId,
-                        lenderId,tenantId,city,address,latitude,longitude,title})=>({area,width,length, 
-                            height,pricePerDay,dateReservedId,spaceTags,additionalInfo,
-                        inventoryId,lenderId,tenantId,city,address,latitude,longitude,title}))(req.body)
+        const spaceData = req.body
         
         try{
+            console.log(spaceData)
             const space = await new Space(spaceData)
             space.monthCalculation()
             space.lenderId = req.user._id
