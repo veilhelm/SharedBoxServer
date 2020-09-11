@@ -85,7 +85,11 @@ const spaceSchema = new Schema ({
     },
     faqs: {
         type: [{type: Schema.Types.ObjectId, ref:"questionAnswer"}]
-    }   
+    },
+    additionalInfo : {
+        type: String,
+        uppercase: true
+    }  
 },{
     timestamps:true
 })
