@@ -88,7 +88,8 @@ const spaceSchema = new Schema ({
     },
     additionalInfo : {
         type: String,
-        uppercase: true
+        uppercase: true,
+        required: true
     }  
 },{
     timestamps:true
