@@ -52,6 +52,18 @@ class LenderService extends EventEmiter {
             res.status(400).json(err.message)
         }
     }
+
+    deleteLender = async(req,res) => {        
+        try {
+            const lenderId = req.user._id;
+            const lender = await Tenant.findByIdAndDelete(lenderId)  
+            console.log(lender) 
+            this.emit("deleteLender",lender)
+            res.status(200).json("Lender sucessfully deleted") 
+        } catch (err){
+            res.status(400).json(err)
+        }
+    }
 }
 
 const lenderService = new LenderService()
@@ -59,6 +71,7 @@ const lenderService = new LenderService()
 //set all listners so that every single function listed here will execute when the specify event within the object lender happens
 lenderService.on(`lenderCreated`,lendersubscribers.sendRegistrationEmail)
 lenderService.on("lenderLoged", () => console.log("a user has loged in the app"))
+lenderService.on("deleteLender", lendersubscribers.deleteLenderReferences)
 module.exports = lenderService
 
 

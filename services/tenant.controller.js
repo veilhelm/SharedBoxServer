@@ -53,8 +53,19 @@ class TenantServices extends EventEmiter{
             res.status(400).json(err.message)
         }
     }
+    deleteTenant = async(req,res) => {
+        const {tenantId} = req.body;
+        try {
+            const tenant = await Tenant.findByIdAndDelete(tenantId)  
+            this.emit("deleteTenant",tenant)
+            res.status(200).json("Tenant sucessfully deleted") 
+        } catch (err){
+            res.status(400).json(err)
+        }
+    }
 }
 const tenantServices = new TenantServices()
 tenantServices.on("createTenant",subcriberTenant.sendRegisterTenant)
 tenantServices.on("updateTenant",tenantSubscribers.sendUpdateTenant)
+tenantServices.on("deleteTenant",tenantSubscribers.deleteTenantReferences)
 module.exports = tenantServices
