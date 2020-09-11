@@ -40,7 +40,6 @@ class SpaceServices extends eventEmiter{
         const spaceData = req.body
         
         try{
-            console.log(spaceData)
             const space = await new Space(spaceData)
             space.monthCalculation()
             space.lenderId = req.user._id
