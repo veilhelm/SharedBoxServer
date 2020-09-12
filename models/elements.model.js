@@ -20,7 +20,7 @@ const elementsSchema = new Schema({
         type:Schema.Types.ObjectId,
         require:true
     },
-    averageValue:{
+    value:{
         type:Number,
         default:0
     }

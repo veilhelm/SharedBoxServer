@@ -5,7 +5,7 @@ const NotificationSubscribers = require("../subscribers/notification.subscribers
 class NotificationServices extends eventEmiter{
 
   createNotification = async (req,res) => {
-      const notificationData = (({lenderId,tenantId,inventories,events,chats})=>({lenderId,tenantId,inventories,events, chats}))(req.body)   
+      const notificationData = (({lenderId,tenantId,inventoryId,events,chats})=>({lenderId,tenantId,inventoryId,events, chats}))(req.body)   
       try{
           const notification = await new Notification(notificationData)         
           this.emit("notificationCreatedLender", {notification,res} )

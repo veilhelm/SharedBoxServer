@@ -2,16 +2,15 @@ const EventEmiter = require("events");
 const Elements =require("../models/elements.model")
 const elementSubscriber = require("../subscribers/element.subscribers")
 
+
 class ElementServices extends EventEmiter{
     
     createNewElement = async (req,res)=>{
-        const dataElement = (({ object, category, quantity, description, averageValue}) => ({object, category, quantity, description, averageValue}))(req.body);
+        const {elements,spaceId} = req.body
         try{
-            const elements = await new Elements(dataElement)
-            elements.tenantId = req.user._id
-            await elements.save()
-            this.emit("elementCreated",elements)
-            res.status(200).json(elements)
+            const tenantId = req.user._id
+            const elementsArr = await Elements.insertMany(elements)
+            this.emit("elementsCreated", {tenantId,spaceId,elementsArr,res})
         }catch(err){
             res.status(400).json(err)
         }
@@ -29,5 +28,7 @@ class ElementServices extends EventEmiter{
     }
 }
 const elementsServices = new ElementServices()
-elementsServices.on('elementCreated',elementSubscriber.addNewElement)
+elementsServices.on('elementsCreated', elementSubscriber.addNewElementsToInventories)
+elementsServices.on('elementsCreated', elementSubscriber.addNewElementsToTenant)
+
 module.exports = elementsServices

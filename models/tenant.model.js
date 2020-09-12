@@ -62,7 +62,8 @@ const tenantSchema = new Schema({
     },
     notifications: {
         type: [{type: Schema.Types.ObjectId, ref:"Notification"}]
-    }
+    },
+    elements:[{type:Schema.Types.ObjectId, ref:"Elements"}]
 },{
     timestamps: true
 })

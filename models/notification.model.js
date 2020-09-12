@@ -10,7 +10,7 @@ const notificationSchema = new Schema ({
     type:Schema.Types.ObjectId,
     ref:"Tenant"
   },
-  inventories:{
+  inventoryId:{
     type: [{type: Schema.Types.ObjectId, ref: "Inventory"}]
   },
   events:{

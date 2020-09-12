@@ -3,10 +3,11 @@ const { Schema, model } = require("mongoose");
 const InventoryShema = new Schema({
     
     spaceId:{
-        type:Schema.Types.ObjectId
+        type:Schema.Types.ObjectId,
+        required:true
     },
-    products:{
-        type:[{type:Schema.Types.ObjectId, ref:"product"}]
+    elements:{
+        type:[{type:Schema.Types.ObjectId, ref:"Elements"}]
     },
     tenantId:{
         type:Schema.Types.ObjectId,
@@ -18,5 +19,5 @@ const InventoryShema = new Schema({
 },{
     timestamps:true
 })
-const inventory = new model("Invetory",InventoryShema)
+const inventory = new model("Inventory",InventoryShema)
 module.exports = inventory
