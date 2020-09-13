@@ -61,7 +61,7 @@ class SpaceServices extends eventEmiter{
         const spaces = await Space.find({lenderId})
         .populate("spaceTags", ["name","description"])
         .populate("dateReservedId", ["initialDate", "finalDate"])
-        .populate("faqs",["question","answer"])
+        .populate("faqs",["question","answer", "_id"])
         res.status(200).json(spaces)
     }
 
@@ -73,7 +73,7 @@ class SpaceServices extends eventEmiter{
             const foundResponse = await Space.find(searchTermConstructor(req.query))
             .populate("dateReservedId", ["initialDate", "finalDate", "tenantId"])
             .populate("spaceTags", ["name","description"])
-            .populate("faqs", ["question", "answer"])
+            .populate("faqs", ["question", "answer", "_id"])
             response = foundResponse
             if(inDate && finDate) response = filterSpaceByDate(foundResponse, inDate, finDate)
             if(tag) response = await filterSpaceByTag(response, tags)
