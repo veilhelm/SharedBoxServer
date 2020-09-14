@@ -4,6 +4,6 @@ module.exports = {
         const { _id, lenderId } = space
         const lender = await Lender.findById(lenderId)
         lender.spaces.push(_id)
-        await lender.save()
+        await lender.save({validateBeforeSave: false})
     }
 }

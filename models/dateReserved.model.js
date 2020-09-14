@@ -8,11 +8,11 @@ const DateReservedSchema = new Schema({
     ref: "Space"
   },
   initialDate: {
-    type: Date,
+    type: String,
     required: true
   },
   finalDate: {
-    type: Date,
+    type: String,
     required: true
   },
   tenantId: {
