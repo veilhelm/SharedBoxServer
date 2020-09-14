@@ -1,7 +1,9 @@
 const sgMail = require("../utils/email")
 const Notification = require('../models/notification.model');
 const Score = require('../models/score.model');
-const Space = require("../models/space.model")
+const spaceTagService = require('../services/spaceTag.controller')
+const Space = require("../models/space.model");
+const SpaceTag = require("../models/spaceTag.model")
 
 module.exports = {
     sendRegistrationEmail: async(lender) =>{
@@ -20,8 +22,10 @@ module.exports = {
     },
     deleteLenderReferences: async(lender) => {
         const {notifications, scores, spaces} = lender;
-        const deleteNotification = await Notification.deleteOne({_id: notifications}) 
-        const deleteScore = await Score.deleteOne({ _id: scores})    
-        const deleteSpace = await Space.deleteOne({ _id: spaces})
+        await Notification.deleteOne({_id: notifications}) 
+        await Score.deleteOne({ _id: scores})
+        const spaceTags = await SpaceTag.find({"spaces": {$in: spaces}})
+        spaceTags.forEach( tag => tag.deleteSpaceId(spaces))
+        await Space.deleteMany({ _id: spaces})
     }
 }
