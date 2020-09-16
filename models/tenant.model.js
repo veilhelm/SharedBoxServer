@@ -59,6 +59,13 @@ const tenantSchema = new Schema({
     },
     city: {
         type: String
+    },
+    subscriptionId: {
+        type: String    
+    },
+    isSubscribed: {
+        type: Boolean,
+        default: false
     }
 },{
     timestamps: true

@@ -62,6 +62,13 @@ const lenderSchema = new Schema ({
     isVerified:{
         type: Boolean,
         default: false
+    },
+    subscriptionId: {
+        type: String    
+    },
+    isSubscribed: {
+        type: Boolean,
+        default: false
     }
 },{
     timestamps: true

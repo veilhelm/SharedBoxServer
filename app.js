@@ -8,15 +8,15 @@ const spaceTagsRouter = require("./routes/spaceTag.route")
 const questionsAnswersRouter = require("./routes/questionsAnswers.route")
 const tenantRouter = require("./routes/tenant.route")
 const scoreRouter = require("./routes/score.route")
+const subscriptionRouter = require("./routes/subscription.route")
 const morgan = require("morgan")
 const helmet = require("helmet")
+
 
 //stablish DB connection
 const db = require("./config/dbConnection")
 db() 
-
 const app = express()
-
 //setUp express app
 app.use(express.json())
 app.use(cors())
@@ -37,4 +37,6 @@ app.use("/queAns", questionsAnswersRouter)
 app.use("/tenant", tenantRouter)
 
 app.use("/score", scoreRouter)
+
+app.use("/subscription", subscriptionRouter)
 module.exports = app

@@ -11,11 +11,11 @@ cloudinary.config({
 })
 
 const authMiddleware = async function( req, res, next){
-    const token = req.header("Authorization") ? req.header("Authorization").replace("Bearer ", "") : null
-    const userType = req.header("x-UserType") ? req.header("x-UserType") : "Lender"
+    const token = req.headers["authorization"] ? req.headers["authorization"].replace("Bearer ", "") : null    
+    const userType = req.headers["x-usertype"] ? req.headers["x-usertype"] : "lender"
     try{
         const userId = jwt.verify(token, process.env.SECRET_KEY)
-        const user =  userType === "Lender" ? await Lender.findOne({_id: userId}) : await Tenant.findOne({_id: userId})
+        const user =  userType === "lender" ? await Lender.findOne({_id: userId}) : await Tenant.findOne({_id: userId})
         if(!user) return res.status(404).json("the user asigned to this token can no longer be found. Please verify if the account still exist")
         req.user = user
         req.token = token

@@ -23,6 +23,7 @@ class LenderService extends EventEmiter {
 
     loginLender = async (req, res) => {
         const {email, password} = req.body
+        console.log(req.body)
         try{
             const lender = await Lender.findOne({email}) || {}
             const isValid = await bcrypt.compare(password, lender.password || "" )
@@ -32,7 +33,6 @@ class LenderService extends EventEmiter {
             this.emit("lenderLoged")
             res.status(200).json(token)
         }catch(err){
-            console.dir(err)
             res.status(401).json(err.message)
         }
     }

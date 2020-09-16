@@ -34,7 +34,7 @@ class TenantServices extends EventEmiter{
             res.status(200).json(token)
 
         }catch(err){
-            res.status(400).json(err.message)
+            res.status(401).json(err.message)
         }
     }
     getInfoTenant = async(req,res)=>{
