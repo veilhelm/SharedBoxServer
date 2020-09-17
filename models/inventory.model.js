@@ -4,7 +4,8 @@ const InventoryShema = new Schema({
     
     spaceId:{
         type:Schema.Types.ObjectId,
-        required:true
+        required:true,
+        ref:"Space"
     },
     elements:{
         type:[{type:Schema.Types.ObjectId, ref:"Elements"}]
