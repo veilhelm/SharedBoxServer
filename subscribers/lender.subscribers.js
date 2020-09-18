@@ -36,7 +36,6 @@ module.exports = {
         const spacesToDelete = await Space.find({"_id": {$in: spaces}})
         spacesToDelete.forEach( space => space.photos.map(imgUrl => {
             const publicId = imgUrl.split("/").pop().replace(".jpg","").split(".")[0]
-            console.log(`sharedBox/${publicId}`)
             cloudinary.uploader.destroy(
                 `sharedBox/${publicId}`,
                 (err,result)=>{
