@@ -8,8 +8,11 @@ class NotificationServices extends eventEmiter{
       const notificationData = (({lenderId,tenantId,inventoryId,events,chats})=>({lenderId,tenantId,inventoryId,events, chats}))(req.body)   
       try{
           const notification = await new Notification(notificationData)         
-          this.emit("notificationCreatedLender", {notification,res} )
-          this.emit("notificationCreatedTenant", {notification,res} )
+          if(req.header("x-UserType")){
+            this.emit("notificationCreatedLender", {notification,res} )
+            this.emit("notificationCreatedTenant", {notification,res} )
+          } 
+          
           await notification.save()
           res.status(200).json(notification)
       } catch(err){

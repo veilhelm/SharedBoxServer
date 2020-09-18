@@ -4,6 +4,13 @@ const Score = require('../models/score.model');
 const spaceTagService = require('../services/spaceTag.controller')
 const Space = require("../models/space.model");
 const SpaceTag = require("../models/spaceTag.model")
+const cloudinary = require('cloudinary').v2
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+})
 
 module.exports = {
     sendRegistrationEmail: async(lender) =>{
@@ -26,6 +33,16 @@ module.exports = {
         await Score.deleteOne({ _id: scores})
         const spaceTags = await SpaceTag.find({"spaces": {$in: spaces}})
         spaceTags.forEach( tag => tag.deleteSpaceId(spaces))
+        const spacesToDelete = await Space.find({"_id": {$in: spaces}})
+        spacesToDelete.forEach( space => space.photos.map(imgUrl => {
+            const publicId = imgUrl.split("/").pop().replace(".jpg","").split(".")[0]
+            cloudinary.uploader.destroy(
+                `sharedBox/${publicId}`,
+                (err,result)=>{
+                    console.log(err, result)
+                }
+            )
+        }))
         await Space.deleteMany({ _id: spaces})
     }
 }

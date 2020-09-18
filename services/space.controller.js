@@ -2,7 +2,13 @@ const eventEmiter = require('events')
 const Space = require('../models/space.model')
 const spaceSubscribers = require('../subscribers/space.subscribers')
 const SpaceTag = require("../models/spaceTag.model")
+const cloudinary = require('cloudinary').v2
 
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+})
 
 
 const searchTermConstructor = query => {
@@ -98,12 +104,11 @@ class SpaceServices extends eventEmiter{
         const files = Object.keys(req.body)
         files.shift()
         try{
-            
             const space = await Space.findById(spaceId)
             files.map(file => {
                 space.photos.push(req.body[file].secure_url)
             })
-            await space.save()
+            await space.save({validateBeforeSave: false})
             res.status(200).json(space.photos)
         }
         catch(err){
@@ -116,12 +121,16 @@ class SpaceServices extends eventEmiter{
         const {photo, spaceId} = req.body
         try{
             const space= await Space.findById(spaceId)
-            
-            const newSpacePhotos = space.photos.filter(spacePhoto => spacePhoto !== photo)
-            space.photos = newSpacePhotos
-            await space.save()
-            
-            res.status(200).json("succesful deleting"+ photo)
+            space.photos = space.photos.filter(spacePhoto => spacePhoto !== photo)
+            await space.save({validateBeforeSave: false})
+            const publicId = photo.split("/").pop().replace(".jpg","").split(".")[0]
+            cloudinary.uploader.destroy(
+                `sharedBox/${publicId}`,
+                (err,result)=>{
+                    console.log(err, result)
+                }
+            )
+            res.status(200).json("succesfully deleting"+ photo)
         }
         catch(err){
             res.status(400).json(err)
