@@ -55,7 +55,7 @@ class SubscriptionServices  extends EventEmiter{
         })
       )
       .catch(err => {
-        console.log(err);
+        res.status(400).json(err.message);
       });
       res.status(202).json({}); 
     } catch(err) {

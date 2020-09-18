@@ -1,8 +1,8 @@
 module.exports = {
     sendRegisterTenant(){
-        console.log("registered tenand")
+        console.log("registered tenant")
     },
     sendUpdateTenant(){
-        console.log("update info tenand")
+        console.log("update info tenant")
     }
 }
