@@ -9,6 +9,8 @@ const questionsAnswersRouter = require("./routes/questionsAnswers.route")
 const tenantRouter = require("./routes/tenant.route")
 const scoreRouter = require("./routes/score.route")
 const subscriptionRouter = require("./routes/subscription.route")
+const elementRouter = require("./routes/element.route")
+const notificationRouter = require("./routes/notification.route")
 const morgan = require("morgan")
 const helmet = require("helmet")
 
@@ -39,4 +41,8 @@ app.use("/tenant", tenantRouter)
 app.use("/score", scoreRouter)
 
 app.use("/subscription", subscriptionRouter)
+app.use("/element", elementRouter)
+
+app.use("/notification", notificationRouter)
+
 module.exports = app

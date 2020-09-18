@@ -4,6 +4,6 @@ module.exports = {
     const { _id, spaceId } = date
     const space = await Space.findById(spaceId)
     space.dateReservedId.push(_id)
-    await space.save()
+    await space.save({validateBeforeSave:false})
   }
 }

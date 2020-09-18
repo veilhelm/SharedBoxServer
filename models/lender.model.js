@@ -40,8 +40,7 @@ const lenderSchema = new Schema ({
         default: 0
     },
     notifications: {
-        type: Schema.Types.ObjectId,
-        ref: "Notification"
+        type: [{type: Schema.Types.ObjectId, ref:"Notification"}]
     },
     spaces: {
         type: [Schema.Types.ObjectId],
