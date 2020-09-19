@@ -8,8 +8,8 @@ const subscriptions = {}
 
 
 const vapidKeys = {
-  publicKey: "BOhqMo15YN5DGHFuudgnppIev5C9V0bUJ4Lvp2kZItN_Zh2aYD8PJ6Q-XdZLWoFFg3p__pl1624hVV2G5ah-b88",
-  privateKey: "HtdJ-_EnNypXhNYeNZmhahFo4x9a1cF_qm6XX_3OA7k"
+  publicKey: process.env.VAPID_PUBLIC_KEY,
+  privateKey: process.env.VAPID_PRIVATE_KEY
 }
 
 
