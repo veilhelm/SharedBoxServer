@@ -1,6 +1,7 @@
 const eventEmiter = require('events')
 const notification = require('../models/notification.model')
 const Notification = require('../models/notification.model')
+const Tenant = require('../models/tenant.model')
 const NotificationSubscribers = require("../subscribers/notification.subscribers")
 
 class NotificationServices extends eventEmiter{
@@ -32,8 +33,32 @@ class NotificationServices extends eventEmiter{
     
     res.status(200).json(notifications)
   }
+
+  updateNotification = async(req,res) => {
+    const {status,notification} = req.body
+    let spaceId = notification.inventoryId.spaceId._id
+    let titleSpace = notification.inventoryId.spaceId.title
+    let initialDate = notification.datesReservedId.initialDate
+    let finalDate = notification.datesReservedId.finalDate
+    let idTenant = notification.tenantId._id
+    let nameLender = notification.lenderId.name
+    let datesReservedId = notification.datesReservedId._id
+
+    const tenant = await Tenant.findById(idTenant)
+
+    if(status==="accept"){
+      this.emit("offerAccepted",{titleSpace,initialDate,finalDate,tenant,nameLender})
+      this.emit("dateUpdating",{datesReservedId,spaceId})
+    } 
+    if(status==="reject") this.emit("offerRejected",{titleSpace,tenant,nameLender})
+    const notificationUpdate = await Notification.update({_id:notification._id},{status: status})
+    res.status(200).json(notificationUpdate)
+  }
 }
 const notificationServices = new NotificationServices()
+notificationServices.on('dateUpdating',NotificationSubscribers.addDateToSpace)
+notificationServices.on('offerRejected',NotificationSubscribers.offerRejected)
+notificationServices.on('offerAccepted',NotificationSubscribers.offerAccepted)
 notificationServices.on('notificationCreatedLender',NotificationSubscribers.addNotificationIdToLender)
 notificationServices.on('notificationCreatedTenant',NotificationSubscribers.addNotificationIdToTenant)
 module.exports = notificationServices
