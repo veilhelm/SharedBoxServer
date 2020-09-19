@@ -4,7 +4,7 @@ const Space = require('../models/space.model')
 
 class QuestionAnswerService extends EventEmiter {
   createNewQA = async (req,res) => {
-    const{faqs} = req.body
+    const faqs = req.body
     const spaceId = faqs[0].spaceId
     try {
       const newQA = await QuestionAnswer.insertMany(faqs);
