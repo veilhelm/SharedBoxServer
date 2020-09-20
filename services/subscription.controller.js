@@ -4,8 +4,7 @@ const Lender = require("../models/lender.model")
 const Tenant = require("../models/tenant.model")
 const crypto = require("crypto");
 const webpush = require("web-push")
-const subscriptions = {}
-
+let subscriptions = {}
 
 const vapidKeys = {
   publicKey: process.env.VAPID_PUBLIC_KEY,
@@ -26,37 +25,61 @@ class SubscriptionServices  extends EventEmiter{
     const subscriptionRequest = req.body;
     const subscriptionId = createHash(JSON.stringify(subscriptionRequest));
     subscriptions[subscriptionId] = subscriptionRequest;
-    this.emit("createSubscription", {subscriptionId, header: req.headers['x-usertype'], userId: req.user._id})
+    const endpoint = subscriptions[subscriptionId].endpoint
+    this.emit("createSubscription", {subscriptionId, subscriptionRequest, header: req.headers['x-usertype'], userId: req.user._id})
     res.status(201).json({ id: subscriptionId });
   }
 
-  unregisterSubscription = async (req,res) => {
-    const subscriptionId = ""
+  unRegisterSubscription = async (req,res) => {
+    const subscriptionId = "";
+    const endpoint = "";
+    const p256dh = "";
+    const auth = "";
     const userType = req.headers['x-usertype'] ? req.headers['x-usertype'] : "lender";
-    const subscribedUser =  userType === "lender" ? await Lender.updateOne({_id: req.user._id},{subscriptionId, isSubscribed: false}) : await Tenant.updateOne({_id: req.user._id},{subscriptionId, isSubscribed: false})    
+    const subscribedUser =  userType === "lender" ? await Lender.updateOne({_id: req.user._id},{subscriptionId, endpoint, p256dh, auth, isSubscribed: false}) : await Tenant.updateOne({_id: req.user._id},{subscriptionId,endpoint, p256dh, auth, isSubscribed: false})    
+  }
+
+  isUserSubscribed = async (req,res) => {
+    try {
+      const subscriptionId = req.user.subscriptionId  
+      const result = subscriptionId ? true : false      
+      res.status(200).json(result)
+    } catch(err){
+      res.status(400).json(err.message);
+    }
+    
   }
 
   sendPushNotification = async (req,res) => {
     try {
+      let subscriptions = {};
+      const {title, text, image, tag, url} = req.body;
+      const payload = JSON.stringify({
+        title,
+        text,
+        image,
+        tag,
+        url
+      })
       const subscriptionId = req.user.subscriptionId
       if (!subscriptionId){
         throw new Error('SubscriptionId not found');
-      } 
+      }     
+      const subscriptionRequest = {
+        endpoint: req.user.endpoint,
+        expirationTime: null,
+        keys: {
+          p256dh: req.user.p256dh,
+          auth: req.user.auth
+        }
+      }
+      subscriptions[subscriptionId] = subscriptionRequest;
       const pushSubscription = subscriptions[subscriptionId];
       webpush
       .sendNotification(
         pushSubscription,
-        JSON.stringify({
-          title: "Probando desde Local ",
-          text: "HEY! Take a look at this brand new t-shirt!",
-          image: "/images/jason-leung-HM6TMmevbZQ-unsplash.jpg",
-          tag: "new-product",
-          url: "http://localhost:3000/user/login"
-        })
+        payload
       )
-      .catch(err => {
-        res.status(400).json(err.message);
-      });
       res.status(202).json({}); 
     } catch(err) {
       res.status(400).json(err.message);

@@ -64,6 +64,15 @@ const lenderSchema = new Schema ({
     },
     subscriptionId: {
         type: String    
+    },    
+    endpoint: {
+        type: String    
+    },
+    p256dh: {
+        type: String    
+    },
+    auth: {
+        type: String    
     },
     isSubscribed: {
         type: Boolean,
