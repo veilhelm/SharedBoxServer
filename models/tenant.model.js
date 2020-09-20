@@ -60,6 +60,22 @@ const tenantSchema = new Schema({
     city: {
         type: String
     },
+    subscriptionId: {
+        type: String    
+    },
+    endpoint: {
+        type: String    
+    },
+    p256dh: {
+        type: String    
+    },
+    auth: {
+        type: String    
+    },
+    isSubscribed: {
+        type: Boolean,
+        default: false
+    },
     notifications: {
         type: [{type: Schema.Types.ObjectId, ref:"Notification"}]
     },

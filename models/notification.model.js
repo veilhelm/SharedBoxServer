@@ -10,14 +10,22 @@ const notificationSchema = new Schema ({
     type:Schema.Types.ObjectId,
     ref:"Tenant"
   },
+  datesReservedId:{
+    type:Schema.Types.ObjectId,
+    ref:"DatesReserved"
+  },
   inventoryId:{
-    type: [{type: Schema.Types.ObjectId, ref: "Inventory"}]
+    type: Schema.Types.ObjectId, 
+    ref: "Inventory"
   },
   events:{
     type: [{type: Schema.Types.ObjectId, ref: "Event"}]
   },
   chats:{
     type: Schema.Types.ObjectId, ref: "Chat"
+  },
+  status:{
+    type: String
   }
 },{
     timestamps:true
