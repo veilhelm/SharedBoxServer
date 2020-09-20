@@ -70,7 +70,6 @@ module.exports = {
     },
 
     addDateToSpace: async({datesReservedId,spaceId}) => {
-        console.log(spaceId)
         const space = await Space.findById(spaceId)
         space.dateReservedId.push(datesReservedId)
         await space.save({validateBeforeSave:false})
