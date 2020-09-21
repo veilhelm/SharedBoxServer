@@ -77,6 +77,9 @@ const lenderSchema = new Schema ({
     isSubscribed: {
         type: Boolean,
         default: false
+    },
+    profilePhoto: {
+        type: String
     }
 },{
     timestamps: true
