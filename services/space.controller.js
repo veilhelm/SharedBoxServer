@@ -13,6 +13,7 @@ cloudinary.config({
 
 const searchTermConstructor = query => {
     const searchTerm = {}
+    if(query._id) searchTerm ["_id"] = query._id
     if(query.title) searchTerm["title"] = query.title
     if(query.location) searchTerm["city"] = query.location
     if(query.pricePerDay) searchTerm["pricePerDay"] =  {$lte: query.pricePerDay}
