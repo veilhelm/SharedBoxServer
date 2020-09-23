@@ -1,11 +1,12 @@
 const  router = require("express").Router()
 const tenantServices = require("../services/tenant.controller")
-const middlewares =require("../utils/middlewares")
+const { authMiddleware, photosMiddleware } = require("../utils/middlewares")
 
 router.route("/").post(tenantServices.createNewTenant)
 router.route("/login").post(tenantServices.loginTenant)
-router.route("/").put(middlewares.authMiddleware, tenantServices.updateTenant)
-router.route("/").get(middlewares.authMiddleware, tenantServices.getInfoTenant)
-router.route("/").delete(middlewares.authMiddleware, tenantServices.deleteTenant)
+router.route("/photos").post(photosMiddleware, tenantServices.savePhotos)
+router.route("/").put(authMiddleware, tenantServices.updateTenant)
+router.route("/").get(authMiddleware, tenantServices.getInfoTenant)
+router.route("/").delete(authMiddleware, tenantServices.deleteTenant)
 
 module.exports = router
