@@ -47,7 +47,6 @@ class SubscriptionServices  extends EventEmiter{
     } catch(err){
       res.status(400).json(err.message);
     }
-    
   }
 
   sendPushNotification = async (req,res) => {
