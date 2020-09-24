@@ -26,7 +26,7 @@ class NotificationServices extends eventEmiter{
     const userType = req.header("x-UserType")  === "tenant" ? "tenantId" : "lenderId"
     const notifications = await Notification.find({[userType]: userId})
     .populate({path:"inventoryId",populate:{path:"elements",select:["quantity","value","object","description"]}})    
-    .populate({path:"inventoryId",select:["elements","spaceId","datesReservedId"],populate:{path:"spaceId",select:["pricePerDay","title"]}})
+    .populate({path:"inventoryId",select:["elements","spaceId","datesReservedId"],populate:{path:"spaceId",select:["pricePerDay","title","photos"]}})
     .populate("datesReservedId",["initialDate","finalDate"])
     .populate("tenantId",["name","phoneNumber"])
     .populate("lenderId",["name","phoneNumber"])
