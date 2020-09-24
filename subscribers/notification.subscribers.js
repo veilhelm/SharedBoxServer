@@ -73,5 +73,23 @@ module.exports = {
         const space = await Space.findById(spaceId)
         space.dateReservedId.push(datesReservedId)
         await space.save({validateBeforeSave:false})
+    },
+
+    offerPaid: async({titleSpace,initialDate,finalDate,tenant,nameLender}) => {
+        const mail = {
+            to: `${tenant.email}`,
+            from: 'sharedbox.tech@gmail.com',
+            subject: `Hi ${tenant.name}!! your transaction for the space${titleSpace} was Successful!!`,
+            text: `Dear ${tenant.name}, we are glad to tell you that your offer for the space ${titleSpace} was successfully paid`,
+            html:`<h4>Dear ${tenant.name}, we are glad to tell you that your transaction to rent the space ${titleSpace} was successfully taken by the Bank.
+            </br>So from ${initialDate} to ${finalDate} the space is yours; congratulations!! be aware of your notifications on ${initialDate}, because the lender ${nameLender}
+            is going to send you your inventory checklist.</h4><br><br>
+            <strong>Checkout your Notifications center in <a href=${process.env.SHARED_BOX_URL}>www.SharedBox.com</a> to see more information about your transaction</strong>`,
+        }
+        try{   
+            await sgMail.send(mail)
+        }catch(err){
+            console.log(err)
+        }
     }
 }

@@ -31,12 +31,19 @@ class SubscriptionServices  extends EventEmiter{
   }
 
   unRegisterSubscription = async (req,res) => {
-    const subscriptionId = "";
+    try{
+      const subscriptionId = "";
     const endpoint = "";
     const p256dh = "";
     const auth = "";
     const userType = req.headers['x-usertype'] ? req.headers['x-usertype'] : "lender";
-    const subscribedUser =  userType === "lender" ? await Lender.updateOne({_id: req.user._id},{subscriptionId, endpoint, p256dh, auth, isSubscribed: false}) : await Tenant.updateOne({_id: req.user._id},{subscriptionId,endpoint, p256dh, auth, isSubscribed: false})    
+    const subscribedUser =  userType === "lender" ? 
+                            await Lender.updateOne({_id: req.user._id},{subscriptionId, endpoint, p256dh, auth, isSubscribed: false}) : 
+                            await Tenant.updateOne({_id: req.user._id},{subscriptionId,endpoint, p256dh, auth, isSubscribed: false})
+    res.status(200).json(subscribedUser)
+    } catch(err) {
+      res.status(400).json(err.message);
+    }    
   }
 
   isUserSubscribed = async (req,res) => {
