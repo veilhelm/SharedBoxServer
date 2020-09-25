@@ -23,7 +23,31 @@ const elementsSchema = new Schema({
     value:{
         type:Number,
         default:0
-    }
+    },
+    status:{
+        type: String,
+        default: "pending",
+        validate:{
+            validator: function (value) {
+                return ["pending","rejected","accepted"].includes(value)
+            },
+            message: "invalid status for the element"
+        }
+    },
+    comment:{
+        type: String
+    },
+    category: {
+        type: String,
+        default: "select",
+        validate:{
+            validator: function (value){
+                return ["select", "incorrect ammount","damaged product", "product not here", "incorrect product", "other"].includes(value)
+            },
+            message: "invalid category"
+        }
+    },
+
 },{
     timestamps:true
 })
