@@ -7,7 +7,6 @@ class DateService extends EventEmiter {
     const dateData  = (({ spaceId, initialDate, finalDate, tenantId}) => ({spaceId, initialDate, finalDate, tenantId}))(req.body);
     try {
       const newDate = await new DateReserved(dateData);
-      this.emit("dateCreated", newDate ) 
       await newDate.save();
       res.status(201).json(newDate)
     } catch(err) {

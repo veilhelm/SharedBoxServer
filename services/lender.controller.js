@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt")
 class LenderService extends EventEmiter {
 
     createNewLender = async (req ,res) => {
-        const lenderData = (({name, email, password, phoneNumber}) => ({name, email ,password, phoneNumber}))(req.body)
+        const lenderData = (({name, email, password, phoneNumber, profilePhoto}) => ({name, email ,password, phoneNumber, profilePhoto}))(req.body)
         try{
             const lender = await new Lender(lenderData)
             const token = await lender.generateAuthToken()
@@ -14,8 +14,22 @@ class LenderService extends EventEmiter {
             lender.tokens.push(token)
             this.emit("lenderCreated", lender)
             await lender.save()
-            res.status(201).json(token)
+            res.status(201).json({userToken:token, id: lender._id})
         }catch(err){
+            res.status(400).json(err.message)
+        }
+    }
+
+    savePhotos = async(req,res) => {
+        const {userId} = req.body
+        const files = req.body['file-0']
+        try{
+            const lender = await Lender.findById(userId)
+            lender.profilePhoto = files.secure_url
+            await lender.save({validateBeforeSave: false})
+            res.status(200).json(lender)
+        }
+        catch(err){
             res.status(400).json(err.message)
         }
     }
@@ -29,7 +43,7 @@ class LenderService extends EventEmiter {
             const token = await lender.generateAuthToken()
             await lender.updateOne({tokens: [...lender.tokens, token]})
             this.emit("lenderLoged")
-            res.status(200).json(token)
+            res.status(200).json({token,name: lender.name})
         }catch(err){
             res.status(401).json(err.message)
         }
@@ -47,7 +61,7 @@ class LenderService extends EventEmiter {
         try{
             const updateSuccesful = await req.user.updateOne({...req.body})
             this.emit("lenderUpdated")
-            res.status(200).json(updateSuccesful)
+            res.status(200).json(req.user._id)
         }catch(err){
             res.status(400).json(err.message)
         }

@@ -61,6 +61,25 @@ const lenderSchema = new Schema ({
     isVerified:{
         type: Boolean,
         default: false
+    },
+    subscriptionId: {
+        type: String    
+    },    
+    endpoint: {
+        type: String    
+    },
+    p256dh: {
+        type: String    
+    },
+    auth: {
+        type: String    
+    },
+    isSubscribed: {
+        type: Boolean,
+        default: false
+    },
+    profilePhoto: {
+        type: String
     }
 },{
     timestamps: true

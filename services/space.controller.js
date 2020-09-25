@@ -13,11 +13,13 @@ cloudinary.config({
 
 const searchTermConstructor = query => {
     const searchTerm = {}
+    if(query._id) searchTerm ["_id"] = query._id
     if(query.title) searchTerm["title"] = query.title
     if(query.location) searchTerm["city"] = query.location
     if(query.pricePerDay) searchTerm["pricePerDay"] =  {$lte: query.pricePerDay}
     if(query.pricePerMonth) searchTerm["pricePermonth"] =  {$lte: query.pricePerMonth}
     if(query.keyword) searchTerm["$or"] = [{title: {$regex: query.keyword}},{additionalInfo:{$regex: query.keyword}}]
+    
     const [minArea, maxArea] = query.area ? query.area.split("-") : [0, 40000]
     const [minWidth, maxWidth] = query.width ? query.width.split("-") : [0, 200]
     const [minLength, maxLength] = query.length ? query.length.split("-") : [0, 200]
