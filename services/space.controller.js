@@ -12,6 +12,7 @@ cloudinary.config({
 
 
 const searchTermConstructor = query => {
+    const pagination= {}
     const searchTerm = {}
     if(query._id) searchTerm ["_id"] = query._id
     if(query.title) searchTerm["title"] = query.title
@@ -19,7 +20,6 @@ const searchTermConstructor = query => {
     if(query.pricePerDay) searchTerm["pricePerDay"] =  {$lte: query.pricePerDay}
     if(query.pricePerMonth) searchTerm["pricePermonth"] =  {$lte: query.pricePerMonth}
     if(query.keyword) searchTerm["$or"] = [{title: {$regex: query.keyword}},{additionalInfo:{$regex: query.keyword}}]
-    
     const [minArea, maxArea] = query.area ? query.area.split("-") : [0, 40000]
     const [minWidth, maxWidth] = query.width ? query.width.split("-") : [0, 200]
     const [minLength, maxLength] = query.length ? query.length.split("-") : [0, 200]
@@ -28,7 +28,13 @@ const searchTermConstructor = query => {
     searchTerm["width"] = {$gte: minWidth, $lte: maxWidth}
     searchTerm["length"] = {$gte: minLength, $lte: maxLength}
     searchTerm["height"] = {$gte: minHeight, $lte: maxHeight}
-    return searchTerm
+    pagination["limit"] = query.limit ? parseInt(query.limit) : 10
+    pagination["skip"] = query.page ? parseInt(query.limit) * (parseInt(query.page) - 1) : 0
+    return {
+        searchTerm,
+        pagination
+    }
+
     }
 
 const filterSpaceByDate = (arrSpaces = [], inDate, finDate) => {
@@ -76,15 +82,18 @@ class SpaceServices extends eventEmiter{
         const {inDate, finDate, tag} = req.query
         const tags = tag ? tag.split(",") : null
         let response
+        const searchTerm = searchTermConstructor(req.query)
         try{
-            const foundResponse = await Space.find(searchTermConstructor(req.query))
+            const foundResponse = await Space.find({...searchTerm.searchTerm})
             .populate("dateReservedId", ["initialDate", "finalDate", "tenantId"])
             .populate("spaceTags", ["name","description"])
             .populate("faqs", ["question", "answer", "_id"])
             response = foundResponse
             if(inDate && finDate) response = filterSpaceByDate(foundResponse, inDate, finDate)
             if(tag) response = await filterSpaceByTag(response, tags)
-            res.status(200).json(response)
+            const maxPages = Math.ceil(response.length / searchTerm.pagination.limit)
+            const arr = response.slice(searchTerm.pagination.skip , searchTerm.pagination.skip + searchTerm.pagination.limit )
+            res.status(200).set(`Content-Pages`, maxPages ).json(arr)
         }catch(err){
             res.status(400).json(err)
         }

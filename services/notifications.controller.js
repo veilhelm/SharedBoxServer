@@ -30,7 +30,6 @@ class NotificationServices extends eventEmiter{
     .populate("datesReservedId",["initialDate","finalDate"])
     .populate("tenantId",["name","phoneNumber"])
     .populate("lenderId",["name","phoneNumber"])
-    
     res.status(200).json(notifications)
   }
 
