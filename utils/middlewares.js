@@ -14,6 +14,7 @@ const authMiddleware = async function( req, res, next){
     const token = req.headers["authorization"] ? req.headers["authorization"].replace("Bearer ", "") : null    
     const userType = req.headers["x-usertype"] ? req.headers["x-usertype"] : "lender"
     try{
+        console.log(jwt.verify(token, process.env.SECRET_KEY))
         const userId = jwt.verify(token, process.env.SECRET_KEY)
         const user =  userType === "lender" ? await Lender.findOne({_id: userId}) : await Tenant.findOne({_id: userId})
         if(!user) return res.status(404).json("the user asigned to this token can no longer be found. Please verify if the account still exist")
@@ -21,6 +22,13 @@ const authMiddleware = async function( req, res, next){
         req.token = token
         next()
     }catch(err){
+        if(token){
+            const user =  userType === "lender" ? await Lender.findOne({tokens:token}) : await Tenant.findOne({tokens:token})
+            const newTokens = user.tokens.filter(t=>{
+                return t !== token
+            })
+            userType === "lender" ? await Lender.updateOne({_id:user._id},{tokens:newTokens}) : await Tenant.updateOne({_id:user._id},{tokens:newTokens})
+        }
         if(err) res.status(401).json("the user is not authorized. Please provide a valid token to proceed")
     }  
 }
