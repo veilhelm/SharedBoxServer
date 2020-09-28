@@ -4,7 +4,6 @@
   "description": "sharedBox Server ",
   "main": "index.js",
   "scripts": {
-    "dbInit": "C:/Users/veilh/mongodb/bin/mongod.exe --dbpath=C:/Users/veilh/mongodb-data",
     "dev": " nodemon index.js"
   },
   "author": "veilhelm alexander guarin",
