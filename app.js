@@ -41,6 +41,7 @@ app.use("/tenant", tenantRouter)
 app.use("/score", scoreRouter)
 
 app.use("/subscription", subscriptionRouter)
+
 app.use("/element", elementRouter)
 
 app.use("/notification", notificationRouter)

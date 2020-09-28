@@ -14,44 +14,62 @@ class NotificationServices extends eventEmiter{
             this.emit("notificationCreatedLender", {notification,res} )
             this.emit("notificationCreatedTenant", {notification,res} )
           } 
-          
           await notification.save()
           res.status(200).json(notification)
       } catch(err){
           res.status(400).json(err.message)
       }
   }  
-  getNotification = async(req,res) => {
-    const userId = req.user._id
-    const userType = req.header("x-UserType")  === "tenant" ? "tenantId" : "lenderId"
-    const notifications = await Notification.find({[userType]: userId})
-    .populate({path:"inventoryId",populate:{path:"elements",select:["quantity","value","object","description"]}})    
-    .populate({path:"inventoryId",select:["elements","spaceId","datesReservedId"],populate:{path:"spaceId",select:["pricePerDay","title"]}})
-    .populate("datesReservedId",["initialDate","finalDate"])
-    .populate("tenantId",["name","phoneNumber"])
-    .populate("lenderId",["name","phoneNumber"])
-    res.status(200).json(notifications)
+
+  getNotifications = async(req,res) => {
+      try{
+        const userId = req.user._id
+        const userType = req.header("x-UserType")  === "tenant" ? "tenantId" : "lenderId"
+        const notifications = await Notification.find({[userType]: userId})
+        .populate({path:"inventoryId",populate:{path:"elements",select:["quantity","value","object","description","category"]}})    
+        .populate({path:"inventoryId",select:["elements","spaceId","datesReservedId"],populate:{path:"spaceId"}})
+        .populate("datesReservedId",["initialDate","finalDate"])
+        .populate("tenantId",["name","phoneNumber"])
+        .populate("lenderId",["name","phoneNumber"])
+        res.status(200).json(notifications)
+      }
+      catch(err){
+        res.status(400).json(err.message)
+      }
+  }
+
+  getNotification = async (req,res) =>{
+    try{
+      const notification = await Notification.find({_id:req.body.notificationId})
+      res.status(200).json(notification)
+    }
+    catch(err){
+      res.status(400).json(err.message)
+    }
   }
 
   updateNotification = async(req,res) => {
-    const {status,notification} = req.body
-    let spaceId = notification.inventoryId.spaceId._id
-    let titleSpace = notification.inventoryId.spaceId.title
-    let initialDate = notification.datesReservedId.initialDate
-    let finalDate = notification.datesReservedId.finalDate
-    let idTenant = notification.tenantId._id
-    let nameLender = notification.lenderId.name
-    let datesReservedId = notification.datesReservedId._id
-
-    const tenant = await Tenant.findById(idTenant)
-
-    if(status==="accept"){
-      this.emit("offerAccepted",{titleSpace,initialDate,finalDate,tenant,nameLender})
-      this.emit("dateUpdating",{datesReservedId,spaceId})
-    } 
-    if(status==="reject") this.emit("offerRejected",{titleSpace,tenant,nameLender})
-    const notificationUpdate = await Notification.update({_id:notification._id},{status: status})
-    res.status(200).json(notificationUpdate)
+    try{
+      const {status,notification} = req.body
+      let spaceId = notification.inventoryId.spaceId._id
+      let titleSpace = notification.inventoryId.spaceId.title
+      let initialDate = notification.datesReservedId.initialDate
+      let finalDate = notification.datesReservedId.finalDate
+      let idTenant = notification.tenantId._id
+      let nameLender = notification.lenderId.name
+      let datesReservedId = notification.datesReservedId._id
+      const tenant = await Tenant.findById(idTenant)
+      if(status==="accept"){
+        this.emit("offerAccepted",{titleSpace,initialDate,finalDate,tenant,nameLender})
+        this.emit("dateUpdating",{datesReservedId,spaceId})
+      } 
+      if(status==="reject") this.emit("offerRejected",{titleSpace,tenant,nameLender})
+      const notificationUpdate = await Notification.update({_id:notification._id},{status: status})
+      res.status(200).json(notificationUpdate)
+    }
+    catch(err){
+      res.status(400).json(err.message)
+    }
   }
 }
 const notificationServices = new NotificationServices()
