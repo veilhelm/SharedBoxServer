@@ -21,7 +21,9 @@ db()
 const app = express()
 //setUp express app
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+    exposedHeaders:['Content-Pages','Content-Total']
+}))
 app.use(morgan("common"))
 app.use(helmet())
 

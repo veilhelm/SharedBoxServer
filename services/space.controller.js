@@ -84,7 +84,9 @@ class SpaceServices extends eventEmiter{
             response = foundResponse
             if(inDate && finDate) response = filterSpaceByDate(foundResponse, inDate, finDate)
             if(tag) response = await filterSpaceByTag(response, tags)
-            res.status(200).json(response)
+            const maxPages = Math.ceil(response.length / searchTerm.pagination.limit)
+            const arr = response.slice(searchTerm.pagination.skip , searchTerm.pagination.skip + searchTerm.pagination.limit )
+            res.status(200).set(`Content-Pages`, maxPages ).set(`Content-Total`, response.length).json(arr)
         }catch(err){
             res.status(400).json(err)
         }
