@@ -18,7 +18,7 @@ module.exports = {
         elementsArr.forEach(element => {
             tenant.elements.push(element._id)
         });
-        await Tenant.findOneAndUpdate({_id: tenantId},tenant)
+        await Tenant.findOneAndUpdate({_id: tenantId}, tenant)
     },
 
     updateStatusOfNotification: async (element) => {
