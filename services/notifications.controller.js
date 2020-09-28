@@ -6,10 +6,10 @@ const NotificationSubscribers = require("../subscribers/notification.subscribers
 
 class NotificationServices extends eventEmiter{
 
-  createNotification = async (req,res) => {
-      const notificationData = (({lenderId,tenantId,inventoryId,events,chats,datesReservedId})=>({lenderId,tenantId,inventoryId,events,chats,datesReservedId}))(req.body)   
+  createNotification = async (req,res) => {         
       try{
-          const notification = await new Notification(notificationData)         
+          const notificationData = (({lenderId,tenantId,inventoryId,events,chats,datesReservedId})=>({lenderId,tenantId,inventoryId,events,chats,datesReservedId}))(req.body)
+          const notification = await new Notification(notificationData)    
           if(req.header("x-UserType")){
             this.emit("notificationCreatedLender", {notification,res} )
             this.emit("notificationCreatedTenant", {notification,res} )
@@ -45,8 +45,7 @@ class NotificationServices extends eventEmiter{
       .populate("datesReservedId",["initialDate","finalDate"])
       .populate("tenantId",["name","email"])
       .populate("lenderId",["name","phoneNumber"])
-
-      console.log(notifications)
+      
       let titleSpace = notifications.inventoryId.spaceId.title
       let initialDate = notifications.datesReservedId.initialDate
       let finalDate = notifications.datesReservedId.finalDate

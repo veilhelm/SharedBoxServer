@@ -37,7 +37,7 @@ const elementsSchema = new Schema({
     comment:{
         type: String
     },
-    category: {
+    errorCategory: {
         type: String,
         default: "select",
         validate:{
