@@ -25,7 +25,8 @@ const notificationSchema = new Schema ({
     type: Schema.Types.ObjectId, ref: "Chat"
   },
   status:{
-    type: String
+    type: String,
+    default: "pending"
   }
 },{
     timestamps:true
