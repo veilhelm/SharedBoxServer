@@ -41,5 +41,6 @@ class ElementServices extends EventEmiter{
 const elementsServices = new ElementServices()
 elementsServices.on('elementsCreated', elementSubscriber.addNewElementsToInventories)
 elementsServices.on('elementsCreated', elementSubscriber.addNewElementsToTenant)
+elementsServices.on('elementUpdated', elementSubscriber.updateStatusOfNotification)
 
 module.exports = elementsServices
