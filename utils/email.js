@@ -2,7 +2,7 @@ const sgMail = require('@sendgrid/mail');
 
 const sendRegistrationEmailToLender = async (lender, tenant, spaceTitle) => {
   let mail = {
-    to: 'donaldollanos96@gmail.com',//`${lender.email}`,
+    to: `${lender.email}`,
     from: 'sharedbox.tech@gmail.com',
     subject: ` Hi ${lender.name}!! your space has a request for reservation in SharedBox!`,
     text: `Dear ${lender.name}, we are glad to tell you that your space ${spaceTitle} has a reservation request
