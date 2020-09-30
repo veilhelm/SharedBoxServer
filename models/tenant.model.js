@@ -40,13 +40,10 @@ const tenantSchema = new Schema({
         default:0
     },
     currentSpaces:{
-        type:[{type:Schema.Types.ObjectId, ref:"currentSpace"}]
+        type:[{type:Schema.Types.ObjectId, ref:"Space"}]
     },
     reservedSpaces:{
-        type:[{type:Schema.Types.ObjectId, ref:"reservedSpace"}]
-    },
-    usedSpaces:{
-        type:[{type:Schema.Types.ObjectId, ref:"usedSpace"}]
+        type:[{type:Schema.Types.ObjectId, ref:"Space"}]
     },
     tokens:[
         {

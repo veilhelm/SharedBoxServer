@@ -8,5 +8,6 @@ router.route('/').post(authMiddleware, spaceServices.createSpace)
 router.route('/').get(authMiddleware, spaceServices.getSpaceOfLender)
 router.route('/').put(authMiddleware, spaceServices.updateSpace)
 router.route('/tenant').get(spaceServices.getSpaceTenant)
+router.route('/tenantRegistered').get(authMiddleware,spaceServices.getSpaceRegisteredTenant)
 
 module.exports = router
