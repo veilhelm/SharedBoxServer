@@ -93,7 +93,7 @@ class SpaceServices extends eventEmiter{
             if(tag) response = await filterSpaceByTag(response, tags)
             const maxPages = Math.ceil(response.length / searchTerm.pagination.limit)
             const arr = response.slice(searchTerm.pagination.skip , searchTerm.pagination.skip + searchTerm.pagination.limit )
-            res.status(200).set(`Content-Pages`, maxPages ).json(arr)
+            res.status(200).set(`Content-Pages`, maxPages ).set(`Content-Total`, response.length).json(arr)
         }catch(err){
             res.status(400).json(err)
         }
