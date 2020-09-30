@@ -142,8 +142,6 @@ class SpaceServices extends eventEmiter{
                  
             response = foundResponse.filter(elem => elem.dateReservedId.length > 0);
             if(inDate && finDate) response = await filterSpaceOutsideDates(response, inDate, finDate) 
-            /*const maxPages = Math.ceil(response.length / searchTerm.pagination.limit)
-            const arr = response.slice(searchTerm.pagination.skip , searchTerm.pagination.skip + searchTerm.pagination.limit )*/
             res.status(200).json(response)
         }catch(err){
             res.status(400).json(err.message)
