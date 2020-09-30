@@ -2,7 +2,7 @@ const Lender = require('../models/lender.model')
 const Tenant = require('../models/tenant.model')
 const Inventory = require('../models/inventory.model')
 const Space = require('../models/space.model')
-const {sendRegistrationEmailToLender, sendOfferRejectionEmailToTenant, sendOfferAcceptedEmailToTenant,sendPayResultEmailToTenant} = require("../utils/email")
+const {sendReservationEmailToLender, sendOfferRejectionEmailToTenant, sendOfferAcceptedEmailToTenant,sendPayResultEmailToTenant} = require("../utils/email")
 const DateReserved = require('../models/dateReserved.model')
 const { setReminderDayBefore } = require('../utils/reminder')
 
@@ -17,7 +17,7 @@ module.exports = {
             const lender = await Lender.findById(lenderId)
             const tenant = await Tenant.findById(tenantId)
             await lender.updateOne({notifications: [...lender.notifications, _id]})                   
-            await sendRegistrationEmailToLender(lender,tenant,spaceTitle)
+            await sendReservationEmailToLender(lender,tenant,spaceTitle)
             await setReminderDayBefore("lender",date,lender,tenant,spaceTitle)
         }catch(err){
             console.log(err.message)
