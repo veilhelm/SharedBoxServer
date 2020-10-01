@@ -3,7 +3,8 @@ const Notification = require('../models/notification.model');
 const Score = require('../models/score.model');
 const spaceTagService = require('../services/spaceTag.controller')
 const Space = require("../models/space.model");
-const SpaceTag = require("../models/spaceTag.model")
+const SpaceTag = require("../models/spaceTag.model");
+const { sendRegistrationEmailtoLender } = require("../utils/email");
 const cloudinary = require('cloudinary').v2
 
 cloudinary.config({
@@ -14,15 +15,8 @@ cloudinary.config({
 
 module.exports = {
     sendRegistrationEmail: async(lender) =>{
-        const mail = {
-            to: `${lender.email}`,
-            from: 'sharedbox.tech@gmail.com',
-            subject: `welcome ${lender.name} to SharedBox!`,
-            text: `thanks ${lender.name} for registring to SharedBox`,
-            html: '<strong>hope you have fun!!!</strong>',
-        }
         try{   
-            await sgMail.send(mail)
+            await sendRegistrationEmailtoLender(lender)
         }catch(err){
             console.log(err)
         }

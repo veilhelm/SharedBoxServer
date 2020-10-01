@@ -1,6 +1,7 @@
 const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-const sendRegistrationEmailToLender = async (lender, tenant, spaceTitle) => {
+const sendReservationEmailToLender = async (lender, tenant, spaceTitle) => {
   let mail = {
     to: `${lender.email}`,
     from: 'sharedbox.tech@gmail.com',
@@ -11,8 +12,18 @@ const sendRegistrationEmailToLender = async (lender, tenant, spaceTitle) => {
     from ${tenant.name}</h4><br><br>
     <strong>Checkout your Notifications center in <a href=${process.env.SHARED_BOX_URL}>www.SharedBox.com</a> where you would be able to accept or reject ${tenant.name}'s offer</strong>`,
   }  
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   await sgMail.send(mail)  
+}
+
+const sendRegistrationEmailtoLender = async (lender) => {
+  let mail = {
+    to: `${lender.email}`,
+    from: 'sharedbox.tech@gmail.com',
+    subject: `welcome ${lender.name} to SharedBox!`,
+    text: `thanks ${lender.name} for registring to SharedBox`,
+    html: '<strong>hope you have fun!!!</strong>',
+  }
+  await sgMail.send(mail)
 }
 
 const sendOfferRejectionEmailToTenant = async (titleSpace,tenant,nameLender) => {
@@ -24,7 +35,6 @@ const sendOfferRejectionEmailToTenant = async (titleSpace,tenant,nameLender) => 
     html:`<h4>Dear ${tenant.name}, we are sorry to tell you that your offer for the space ${titleSpace} was rejected by ${nameLender}</h4><br><br>
     <strong>Checkout your Notifications center in <a href=${process.env.SHARED_BOX_URL}>www.SharedBox.com</a> and don't worry we will help you to find the best space for you</strong>`,
   }  
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   await sgMail.send(mail)  
 }
 
@@ -37,7 +47,6 @@ const sendOfferAcceptedEmailToTenant = async (titleSpace,initialDate,finalDate,t
     html:`<h4>Dear ${tenant.name}, we are glad to tell you that your offer for the space ${titleSpace} was accepted by ${nameLender}</br>from ${initialDate} to ${finalDate} </h4><br><br>
     <strong>Checkout your Notifications center in <a href=${process.env.SHARED_BOX_URL}>www.SharedBox.com</a> to see more information about your transaction</strong>`,
   }  
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   await sgMail.send(mail)  
 }
 
@@ -52,7 +61,6 @@ const sendPayResultEmailToTenant = async (titleSpace,initialDate,finalDate,tenan
     is going to send you your inventory checklist.</h4><br><br>
     <strong>Checkout your Notifications center in <a href=${process.env.SHARED_BOX_URL}>www.SharedBox.com</a> to see more information about your transaction</strong>`,
   }  
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   await sgMail.send(mail)  
 }
 8
@@ -67,7 +75,6 @@ const sendReminder1DayBeforeReservationToLender = async (titleSpace,date,tenant,
 
     <strong>Checkout your Notifications center in <a href=${process.env.SHARED_BOX_URL}>www.SharedBox.com</a> to see more information about your transaction</strong>`,
   }  
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   await sgMail.send(mail)  
 }
 
@@ -81,15 +88,15 @@ const sendReminder1DayBeforeReservationToTenant = async (titleSpace,date,tenant,
     </br>Remember what from ${date.initialDate} to ${date.finalDate} the space is yours; congratulations!!. If you have any problem please contact with the owner ${lender.name}.
     <strong>Checkout your Notifications center in <a href=${process.env.SHARED_BOX_URL}>www.SharedBox.com</a> to see more information about your transaction</strong>`,
   }  
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   await sgMail.send(mail)  
 }
 
 module.exports = {
-  sendRegistrationEmailToLender,
+  sendReservationEmailToLender,
   sendOfferRejectionEmailToTenant,
   sendOfferAcceptedEmailToTenant,
   sendPayResultEmailToTenant,
   sendReminder1DayBeforeReservationToLender,
-  sendReminder1DayBeforeReservationToTenant
+  sendReminder1DayBeforeReservationToTenant,
+  sendRegistrationEmailtoLender,
 }
