@@ -35,6 +35,20 @@ module.exports = {
             notification.status = "rejected-element"
             notification.events.push(event._id)
             notification.save({validateBeforeSave: false})
+        }
+        if(element.status === "updated"){            
+            const [inventory] = await Inventory.find({'elements': element._id})
+            const [notification] = await Notification.find({'inventoryId': inventory._id})
+            const event = await new Event({
+                type: "element-updated",
+                objectAffected: element._id,
+                typeOfObjectAffected: "Elements",
+                message:`${notification.lenderId} pointed out that there is an inconsistancy in your inventory. Please contact him`
+            })
+            await event.save()
+            notification.status = "updated-element"
+            notification.events.push(event._id)
+            notification.save({validateBeforeSave: false})
         } 
     }
 }
