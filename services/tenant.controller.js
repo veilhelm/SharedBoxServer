@@ -77,6 +77,19 @@ class TenantServices extends EventEmiter{
             res.status(400).json(err)
         }
     }
+    updateReservedSpaces = async(req,res) => {
+        try {
+            let reservedSpaces = req.user.reservedSpaces || {};
+            if (!reservedSpaces.some(elem => elem == req.body.reservedSpaces)){
+                reservedSpaces.push(req.body.reservedSpaces)
+                const updateSuccesful = await Tenant.updateOne({_id: req.user._id},{reservedSpaces})
+            }            
+            res.status(200).json("Tenant sucessfully updated") 
+        } catch(err){
+            res.status(400).json(err.message)
+        }
+
+    }
 }
 const tenantServices = new TenantServices()
 tenantServices.on("createTenant",subcriberTenant.sendRegisterTenant)

@@ -22,7 +22,7 @@ const app = express()
 //setUp express app
 app.use(express.json())
 app.use(cors({
-    exposedHeaders:['Content-Pages']
+    exposedHeaders:['Content-Pages','Content-Total']
 }))
 app.use(morgan("common"))
 app.use(helmet())
