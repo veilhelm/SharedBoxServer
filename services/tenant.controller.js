@@ -44,7 +44,7 @@ class TenantServices extends EventEmiter{
             if (Object.keys(tenant).length === 0 || !validPass) throw Error("email and password incorrect")
             const token = await tenant.generateAuthToken()
             await tenant.updateOne({tokens: [...tenant.tokens, token]})
-            res.status(200).json({token,name: tenant.name})
+            res.status(200).json({token,name: tenant.name,profilePhoto:tenant.profilePhoto})
 
         }catch(err){
             res.status(401).json(err.message)
