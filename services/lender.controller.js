@@ -43,7 +43,7 @@ class LenderService extends EventEmiter {
             const token = await lender.generateAuthToken()
             await lender.updateOne({tokens: [...lender.tokens, token]})
             this.emit("lenderLoged")
-            res.status(200).json({token,name: lender.name})
+            res.status(200).json({token,name: lender.name,profilePhoto:lender.profilePhoto})
         }catch(err){
             res.status(401).json(err.message)
         }
