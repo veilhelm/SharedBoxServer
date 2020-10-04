@@ -6,7 +6,7 @@ const eventSchema = new Schema({
         default: "application-event",
         validate:{
             validator: function(value) {
-                return ["element-rejected", "element-updated", "application-event"].includes(value)
+                return ["element-rejected", "element-updated", "application-event","element-accepted"].includes(value)
             },
             message: "invalid type of event"
         }
