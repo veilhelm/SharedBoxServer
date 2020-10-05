@@ -49,9 +49,9 @@ class NotificationServices extends eventEmiter{
       let initialDate = notifications.datesReservedId.initialDate
       let finalDate = notifications.datesReservedId.finalDate
       let tenant = notifications.tenantId
-      let nameLender = notifications.lenderId.name
+      let lender = notifications.lenderId
       
-      this.emit("offerPaid",{titleSpace,initialDate,finalDate,tenant,nameLender})
+      this.emit("offerPaid",{titleSpace,initialDate,finalDate,tenant,lender})
     }
     else if(typeof(notification)==='object'){
       let spaceId = notification.inventoryId.spaceId._id

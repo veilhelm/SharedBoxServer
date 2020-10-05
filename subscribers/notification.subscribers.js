@@ -2,7 +2,7 @@ const Lender = require('../models/lender.model')
 const Tenant = require('../models/tenant.model')
 const Inventory = require('../models/inventory.model')
 const Space = require('../models/space.model')
-const {sendReservationEmailToLender, sendOfferRejectionEmailToTenant, sendOfferAcceptedEmailToTenant,sendPayResultEmailToTenant} = require("../utils/email")
+const {sendReservationEmailToLender, sendOfferRejectionEmailToTenant, sendOfferAcceptedEmailToTenant,sendPayResultEmailToTenant,sendPayResultEmailToLender} = require("../utils/email")
 const DateReserved = require('../models/dateReserved.model')
 const { setReminderDayBefore } = require('../utils/reminder')
 
@@ -61,9 +61,10 @@ module.exports = {
         await space.save({validateBeforeSave:false})
     },
 
-    offerPaid: async({titleSpace,initialDate,finalDate,tenant,nameLender}) => {
+    offerPaid: async({titleSpace,initialDate,finalDate,tenant,lender}) => {
         try{   
-            await sendPayResultEmailToTenant(titleSpace,initialDate,finalDate,tenant,nameLender)
+            await sendPayResultEmailToTenant(titleSpace,initialDate,finalDate,tenant,lender)
+            await sendPayResultEmailToLender(titleSpace,initialDate,finalDate,tenant,lender)
         }catch(err){
             console.log(err.message)
         }

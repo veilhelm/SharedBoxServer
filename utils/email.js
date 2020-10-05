@@ -50,20 +50,34 @@ const sendOfferAcceptedEmailToTenant = async (titleSpace,initialDate,finalDate,t
   await sgMail.send(mail)  
 }
 
-const sendPayResultEmailToTenant = async (titleSpace,initialDate,finalDate,tenant,nameLender) => {
+const sendPayResultEmailToTenant = async (titleSpace,initialDate,finalDate,tenant,lender) => {
   let mail = {
     to: `${tenant.email}`,
     from: 'sharedbox.tech@gmail.com',
     subject: `Hi ${tenant.name}!! your transaction for the space${titleSpace} was Successful!!`,
     text: `Dear ${tenant.name}, we are glad to tell you that your offer for the space ${titleSpace} was successfully paid`,
     html:`<h4>Dear ${tenant.name}, we are glad to tell you that your transaction to rent the space ${titleSpace} was successfully taken by the Bank.
-    </br>So from ${initialDate} to ${finalDate} the space is yours; congratulations!! be aware of your notifications on ${initialDate}, because the lender ${nameLender}
+    </br>So from ${initialDate} to ${finalDate} the space is yours; congratulations!! be aware of your notifications on ${initialDate}, because the lender ${lender.name}
     is going to send you your inventory checklist.</h4><br><br>
     <strong>Checkout your Notifications center in <a href=${process.env.SHARED_BOX_URL}>www.SharedBox.com</a> to see more information about your transaction</strong>`,
   }  
   await sgMail.send(mail)  
 }
-8
+
+const sendPayResultEmailToLender = async (titleSpace,initialDate,finalDate,tenant,lender) => {
+  let mail = {
+    to: `${lender.email}`,
+    from: 'sharedbox.tech@gmail.com',
+    subject: `Hi ${lender.name}!! the transaction for your space${titleSpace} was Done!!`,
+    text: `Dear ${lender.name}, we are glad to tell you that your space ${titleSpace}'s reservation was successfully paid`,
+    html:`<h4>Dear ${lender.name}, we are glad to tell you that your space ${titleSpace}'s reservation was successfully paid by the tenant ${tenant.name}.
+    </br>So from ${initialDate} to ${finalDate} your space will be taken by ${tenant.name}; please be aware of your notifications on ${initialDate}, because the tenant
+    is going to send you his inventory and you need to do its checklist.</h4><br><br>
+    <strong>Checkout your Notifications center in <a href=${process.env.SHARED_BOX_URL}>www.SharedBox.com</a> to see more information about your transaction</strong>`,
+  }  
+  await sgMail.send(mail)  
+}
+
 const sendReminder1DayBeforeReservationToLender = async (titleSpace,date,tenant,lender) => {
   let mail = {
     to: `${lender.email}`,
@@ -99,4 +113,5 @@ module.exports = {
   sendReminder1DayBeforeReservationToLender,
   sendReminder1DayBeforeReservationToTenant,
   sendRegistrationEmailtoLender,
+  sendPayResultEmailToLender,
 }
