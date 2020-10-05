@@ -1,5 +1,6 @@
 const EventEmiter = require("events");
 const Elements =require("../models/elements.model")
+const Inventory = require('../models/inventory.model')
 const elementSubscriber = require("../subscribers/element.subscribers")
 
 
@@ -29,11 +30,23 @@ class ElementServices extends EventEmiter{
 
     updateElements = async (req, res) => {
         try{
-            const [element] = await Elements.find({_id: req.body.id})
-            await element.updateOne({...req.body.data})
-            this.emit("elementUpdated", element)
+            const element = await Elements.findOneAndUpdate({"_id": req.body.id},{$set:{...req.body.data}},{new:true})
+            this.emit("elementUpdated", element)            
             res.status(200).json(element)
         }catch(err){
+            res.status(400).json(err)
+        }
+    }
+
+    getElementsByInventoryId = async (req, res) => {
+        try{
+            const {inventoryId} = req.query
+            
+            const inventory = await Inventory.findById(inventoryId)
+                                .populate("elements")
+            res.status(200).json(inventory.elements)
+        }
+        catch(err){
             res.status(400).json(err)
         }
     }

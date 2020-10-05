@@ -29,7 +29,7 @@ const elementsSchema = new Schema({
         default: "pending",
         validate:{
             validator: function (value) {
-                return ["pending","rejected","accepted"].includes(value)
+                return ["pending","element-rejected","element-accepted","element-updated"].includes(value)
             },
             message: "invalid status for the element"
         }

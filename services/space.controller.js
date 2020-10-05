@@ -3,6 +3,7 @@ const Space = require('../models/space.model')
 const spaceSubscribers = require('../subscribers/space.subscribers')
 const SpaceTag = require("../models/spaceTag.model")
 const cloudinary = require('cloudinary').v2
+const moment = require("moment")
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -36,6 +37,24 @@ const searchTermConstructor = query => {
     }
 
     }
+const finalGreaterThanIn = (inDate, finalDate, initialDate) => {
+    let result = Date.parse(inDate) <= Date.parse(finalDate) 
+    return result
+}
+
+const finDateGreaterThanInitial = (finDate, initialDate, finalDate) => {
+    let result = Date.parse(finDate) >= Date.parse(initialDate)
+    return result
+}
+const filterSpaceOutsideDates = async (arrSpaces = [], inDate, finDate) => {
+    let filteredSpaces = arrSpaces.filter( ({dateReservedId}) => {
+        const someRes = dateReservedId.some( ({initialDate, finalDate}) => 
+        finalGreaterThanIn(inDate, finalDate, initialDate)
+        && finDateGreaterThanInitial(finDate, initialDate, finalDate))
+        return someRes
+    })
+    return filteredSpaces
+}
 
 const filterSpaceByDate = (arrSpaces = [], inDate, finDate) => {
     return arrSpaces.filter( ({dateReservedId}) => !dateReservedId.some( ({initialDate, finalDate}) => (Date.parse(inDate) < Date.parse(finalDate) && Date.parse(inDate) > Date.parse(initialDate) ) || (Date.parse(finDate) > Date.parse(initialDate) && Date.parse(finDate) < Date.parse(finalDate))))
@@ -95,7 +114,37 @@ class SpaceServices extends eventEmiter{
             const arr = response.slice(searchTerm.pagination.skip , searchTerm.pagination.skip + searchTerm.pagination.limit )
             res.status(200).set(`Content-Pages`, maxPages ).set(`Content-Total`, response.length).json(arr)
         }catch(err){
-            res.status(400).json(err)
+            res.status(400).json(err.message)
+        }
+    }
+
+    getSpaceRegisteredTenant = async (req, res) => {
+        const {state} = req.query
+        let response, inDate, finDate  
+        const searchTerm = searchTermConstructor(req.query)            
+        try{ 
+            switch(state){
+                case 'current':
+                    inDate = moment().format("YYYY-MM-DD")
+                    finDate = moment().add(1,'days').format("YYYY-MM-DD")
+                    
+                    break
+                case 'reserved':
+                    break
+                case 'incoming':
+                    break
+                default:                 
+            }      
+            let foundResponse = await Space.find()
+                .populate({path: "dateReservedId", model: "DatesReserved", match:{tenantId: req.user._id }, select: "initialDate finalDate tenantId"})
+                .populate("spaceTags", ["name","description"])
+                .populate("faqs", ["question", "answer", "_id"])                
+                 
+            response = foundResponse.filter(elem => elem.dateReservedId.length > 0);
+            if(inDate && finDate) response = await filterSpaceOutsideDates(response, inDate, finDate) 
+            res.status(200).json(response)
+        }catch(err){
+            res.status(400).json(err.message)
         }
     }
 

@@ -7,7 +7,8 @@ function db () {
     const options = { 
         useNewUrlParser : true,
         useUnifiedTopology : true,
-        useCreateIndex: true
+        useCreateIndex: true,
+        useFindAndModify:false
     }
 
     //connect to database

@@ -1,4 +1,6 @@
 const { Schema ,model} = require("mongoose");
+const Inventory = require("./inventory.model")
+const Element = require("./elements.model")
 
 const notificationSchema = new Schema ({
   lenderId:{
@@ -32,5 +34,13 @@ const notificationSchema = new Schema ({
     timestamps:true
 })
 
+notificationSchema.post("save",async function(){
+ const [inventory] = await Inventory.find({_id:this.inventoryId})
+ const elements = await Element.find({_id:{$in:inventory.elements}})
+ if (elements.every(element=>element.status==="element-accepted")){
+    this.status="element-accepted"
+    await this.save({validateBeforeSave: false})
+ }
+})
 const notification = new model("Notification",notificationSchema)
 module.exports = notification

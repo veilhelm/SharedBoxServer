@@ -43,7 +43,7 @@ class LenderService extends EventEmiter {
             const token = await lender.generateAuthToken()
             await lender.updateOne({tokens: [...lender.tokens, token]})
             this.emit("lenderLoged")
-            res.status(200).json({token,name: lender.name})
+            res.status(200).json({token,name: lender.name,profilePhoto:lender.profilePhoto})
         }catch(err){
             res.status(401).json(err.message)
         }
@@ -83,7 +83,6 @@ const lenderService = new LenderService()
 
 //set all listners so that every single function listed here will execute when the specify event within the object lender happens
 lenderService.on(`lenderCreated`, lendersubscribers.sendRegistrationEmail)
-lenderService.on("lenderLoged", () => console.log("a user has loged in the app"))
 lenderService.on("deleteLender", lendersubscribers.deleteLenderReferences)
 module.exports = lenderService
 

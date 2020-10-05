@@ -14,7 +14,6 @@ class NotificationServices extends eventEmiter{
             this.emit("notificationCreatedLender", {notification,res} )
             this.emit("notificationCreatedTenant", {notification,res} )
           } 
-          
           await notification.save()
           res.status(200).json(notification)
       } catch(err){
@@ -25,8 +24,8 @@ class NotificationServices extends eventEmiter{
     const userId = req.user._id
     const userType = req.header("x-UserType")  === "tenant" ? "tenantId" : "lenderId"
     const notifications = await Notification.find({[userType]: userId})
-    .populate({path:"inventoryId",populate:{path:"elements",select:["quantity","value","object","description"]}})    
-    .populate({path:"inventoryId",select:["elements","spaceId","datesReservedId"],populate:{path:"spaceId",select:["pricePerDay","title","photos"]}})
+    .populate({path:"inventoryId",populate:{path:"elements"}})    
+    .populate({path:"inventoryId",select:["elements","spaceId","datesReservedId"],populate:{path:"spaceId"}})
     .populate("datesReservedId",["initialDate","finalDate"])
     .populate("tenantId",["name","phoneNumber"])
     .populate("lenderId",["name","phoneNumber"])
@@ -62,9 +61,7 @@ class NotificationServices extends eventEmiter{
       let idTenant = notification.tenantId._id
       let nameLender = notification.lenderId.name
       let datesReservedId = notification.datesReservedId._id
-  
       const tenant = await Tenant.findById(idTenant)
-  
       if(status==="accept"){
         this.emit("offerAccepted",{titleSpace,initialDate,finalDate,tenant,nameLender})
         this.emit("dateUpdating",{datesReservedId,spaceId})
